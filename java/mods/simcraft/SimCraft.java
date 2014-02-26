@@ -7,6 +7,7 @@ import mods.simcraft.common.Content;
 import mods.simcraft.common.Repository;
 import mods.simcraft.creative.CreativeTab;
 import mods.simcraft.data.HomeManager;
+import mods.simcraft.data.MarketManager;
 import mods.simcraft.network.CommonProxy;
 import mods.simcraft.network.PacketPipeline;
 import cpw.mods.fml.common.Mod;
@@ -69,5 +70,6 @@ public class SimCraft
     public void serverStart(FMLServerStartingEvent event)
     {
     	HomeManager.loadAllHomes();
+    	MarketManager.loadMarketPlace();
     }
 }

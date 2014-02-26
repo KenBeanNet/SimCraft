@@ -61,9 +61,9 @@ public class SimObjectTileEntity extends TileEntity
 		{
 			timeLeft -= 1;
 			if (timeLeft % 60 == 0 && timeLeft != 0) // We don't want to run at 0, because we want the done sound to play.
-				worldObj.playSoundEffect((double)((float)xCoord + 0.5F), (double)((float)yCoord + 0.5F), (double)((float)zCoord + 0.5F), SimCraft.MODID + ":" + "construction", 2.0f, 2.0f);
+				worldObj.playSoundEffect((double)((float)xCoord + 0.5F), (double)((float)yCoord + 0.5F), (double)((float)zCoord + 0.5F), SimCraft.MODID + ":building", 2.0f, 2.0f);
 			else if (timeLeft == 0)
-				worldObj.playSoundEffect((double)((float)xCoord + 0.5F), (double)((float)yCoord + 0.5F), (double)((float)zCoord + 0.5F), SimCraft.MODID + ":" + "constructiondone", 2.0f, 2.0f);
+				worldObj.playSoundEffect((double)((float)xCoord + 0.5F), (double)((float)yCoord + 0.5F), (double)((float)zCoord + 0.5F), SimCraft.MODID + ":building.complete", 2.0f, 2.0f);
 		}
 		else 
 			timeLeft = 0;

@@ -1,0 +1,14 @@
+{
+  "building": {
+    "category": "player",
+    "sounds": [
+      "construction"
+    ]
+  },
+"building.complete": {
+    "category": "player",
+    "sounds": [
+      "constructiondone"
+    ]
+  }
+}

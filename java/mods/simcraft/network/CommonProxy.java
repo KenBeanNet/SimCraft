@@ -8,6 +8,7 @@ import java.util.Map;
 
 import mods.simcraft.SimCraft;
 import mods.simcraft.tileentity.HomeTileEntity;
+import mods.simcraft.tileentity.MarketTileEntity;
 import mods.simcraft.tileentity.SimObjectTileEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,6 +26,7 @@ public class CommonProxy {
     {
 		GameRegistry.registerTileEntity(SimObjectTileEntity.class, SimCraft.MODID + "SimObjectTileEntity");
 		GameRegistry.registerTileEntity(HomeTileEntity.class, SimCraft.MODID + "HomeTileEntity");
+		GameRegistry.registerTileEntity(MarketTileEntity.class, SimCraft.MODID + "MarketTileEntity");
     }
 	
 	public File getMinecraftDir()

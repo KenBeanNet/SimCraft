@@ -74,11 +74,13 @@ public class HomeGui extends GuiScreen
 			
 			drawString(this.fontRendererObj, "Home Stats", 10, 50, 0xFFCC00);
 			drawString(this.fontRendererObj, "Level " + tileHome.getLevel(), 10, 60, 0x66CC66);
+			drawString(this.fontRendererObj, "Size " + HomeManager.getHomeSize(tileHome.getLevel()), 10, 70, 0x66CC66);
 			
 			if (tileHome.hasNextLevel())
 			{
 				drawString(this.fontRendererObj, "Next Level Stats", 10, 100, 0xFFCC00);
 				drawString(this.fontRendererObj, "Level " + (tileHome.getLevel() + 1), 10, 110, 0x66CC66);
+				drawString(this.fontRendererObj, "Size " + HomeManager.getHomeSize(tileHome.getLevel() + 1), 10, 70, 0x66CC66);
 				drawString(this.fontRendererObj, "Upgrade Requirements", 10, 140, 0xFFCC00);
 				btnUpgradeLevel.visible = true;
 			}

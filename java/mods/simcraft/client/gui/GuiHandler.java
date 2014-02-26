@@ -5,7 +5,9 @@ import java.util.Map;
 
 import mods.simcraft.SimCraft;
 import mods.simcraft.common.DefaultContainer;
+import mods.simcraft.inventory.MarketContainer;
 import mods.simcraft.tileentity.HomeTileEntity;
+import mods.simcraft.tileentity.MarketTileEntity;
 import mods.simcraft.tileentity.SimObjectTileEntity;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -28,6 +30,7 @@ public class GuiHandler implements IGuiHandler
 			default: return new DefaultContainer();
 			case 0: return new DefaultContainer();
 			case 1: return new DefaultContainer();
+			case 2: return new MarketContainer(player.inventory, (MarketTileEntity)world.getTileEntity(x, y, z), 0, 0);
 		}
 	}
 
@@ -39,6 +42,7 @@ public class GuiHandler implements IGuiHandler
 			default: return null;
 			case 0: return new HomeGui(player, (HomeTileEntity)world.getTileEntity(x, y, z), x, y, z);
 			case 1: return new BuildingGui((SimObjectTileEntity)world.getTileEntity(x, y, z), x, y, z);
+			case 2: return new MarketGui(player, (MarketTileEntity)world.getTileEntity(x, y, z), x, y, z);
 		}
 	}
  
