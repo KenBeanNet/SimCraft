@@ -1,4 +1,4 @@
-package mods.simcraft.common;
+package mods.simcraft.inventory;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;

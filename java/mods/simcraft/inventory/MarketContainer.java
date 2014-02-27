@@ -1,5 +1,7 @@
 package mods.simcraft.inventory;
 
+import mods.simcraft.tileentity.MarketTileEntity;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
@@ -7,92 +9,70 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class MarketContainer extends Container {
-    private EntityPlayer player;
-    private IInventory chest;
-
-    public MarketContainer(IInventory playerInventory, IInventory chestInventory, int xSize, int ySize)
+public class MarketContainer extends Container 
+{
+	MarketTileEntity tile;
+    public MarketContainer(IInventory playerInventory, MarketTileEntity chestInventory)
     {
-        chest = chestInventory;
-        player = ((InventoryPlayer) playerInventory).player;
-        chestInventory.openInventory();
-        layoutContainer(playerInventory, chestInventory, xSize, ySize);
+    	tile = chestInventory;
+    	//the Slot constructor takes the IInventory and the slot number in that it binds to
+        //and the x-y coordinates it resides on-screen
+        for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 2; j++) {
+                        addSlotToContainer(new Slot(chestInventory, j + i * 3,  187 + i * 18, 63 + j * 18));
+                }
+        }
+        
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 9; j++) {
+                    addSlotToContainer(new Slot(playerInventory, j + i * 9 + 9, 133 + j * 18, 122 + i * 18));
+            }
+        }
+
+        for (int i = 0; i < 9; i++) {
+            addSlotToContainer(new Slot(playerInventory, i, 133 + i * 18, 180));
+        }
     }
 
     @Override
     public boolean canInteractWith(EntityPlayer player)
     {
-        return chest.isUseableByPlayer(player);
+    	return tile.isUseableByPlayer(player);
     }
 
     @Override
-    public ItemStack transferStackInSlot(EntityPlayer p, int i)
+    public ItemStack transferStackInSlot(EntityPlayer player, int slot) 
     {
-        ItemStack itemstack = null;
-        Slot slot = (Slot) inventorySlots.get(i);
-        if (slot != null && slot.getHasStack())
-        {
-            ItemStack itemstack1 = slot.getStack();
-            itemstack = itemstack1.copy();
-            /*if (i < type.size)
-            {
-                if (!mergeItemStack(itemstack1, type.size, inventorySlots.size(), true))
-                {
-                    return null;
+    	ItemStack stack = null;
+        Slot slotObject = (Slot) inventorySlots.get(slot);
+
+        //null checks and checks if the item can be stacked (maxStackSize > 1)
+        if (slotObject != null && slotObject.getHasStack()) {
+                ItemStack stackInSlot = slotObject.getStack();
+                stack = stackInSlot.copy();
+
+                //merges the item into player inventory since its in the tileEntity
+                if (slot < 6) {
+                        if (!this.mergeItemStack(stackInSlot, 9, 45, true)) {
+                                return null;
+                        }
                 }
-            }
-            else if (!type.acceptsStack(itemstack1))
-            {
-                return null;
-            }
-            else if (!mergeItemStack(itemstack1, 0, type.size, false))
-            {
-                return null;
-            }*/
-            if (itemstack1.stackSize == 0)
-            {
-                slot.putStack(null);
-            }
-            else
-            {
-                slot.onSlotChanged();
-            }
+                //places it into the tileEntity is possible since its in the player inventory
+                else if (!this.mergeItemStack(stackInSlot, 0, 9, false)) {
+                        return null;
+                }
+
+                if (stackInSlot.stackSize == 0) {
+                        slotObject.putStack(null);
+                } else {
+                        slotObject.onSlotChanged();
+                }
+
+                if (stackInSlot.stackSize == stack.stackSize) {
+                        return null;
+                }
+                slotObject.onPickupFromSlot(player, stackInSlot);
         }
-        return itemstack;
-    }
-
-    @Override
-    public void onContainerClosed(EntityPlayer entityplayer)
-    {
-        super.onContainerClosed(entityplayer);
-        chest.closeInventory();
-    }
-
-    protected void layoutContainer(IInventory playerInventory, IInventory chestInventory, int xSize, int ySize)
-    {
-
-        /*for (int chestRow = 0; chestRow < type.getRowCount(); chestRow++)
-        {
-            for (int chestCol = 0; chestCol < type.getRowLength(); chestCol++)
-            {
-                addSlotToContainer(type.makeSlot(chestInventory, chestCol + chestRow * type.getRowLength(), 12 + chestCol * 18, 8 + chestRow * 18));
-            }
-        }*/
-
-        int leftCol = (xSize - 162) / 2 + 1;
-        for (int playerInvRow = 0; playerInvRow < 3; playerInvRow++)
-        {
-            for (int playerInvCol = 0; playerInvCol < 9; playerInvCol++)
-            {
-                addSlotToContainer(new Slot(playerInventory, playerInvCol + playerInvRow * 9 + 9, leftCol + playerInvCol * 18, ySize - (4 - playerInvRow) * 18
-                        - 10));
-            }
-
-        }
-
-        for (int hotbarSlot = 0; hotbarSlot < 9; hotbarSlot++)
-        {
-            addSlotToContainer(new Slot(playerInventory, hotbarSlot, leftCol + hotbarSlot * 18, ySize - 24));
-        }
+        return stack;
     }
 }

@@ -1,8 +1,9 @@
 package mods.simcraft;
 
 import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import mods.simcraft.client.gui.GuiHandler;
+import net.minecraftforge.common.MinecraftForge;
 import mods.simcraft.common.Content;
 import mods.simcraft.common.Repository;
 import mods.simcraft.creative.CreativeTab;
@@ -10,6 +11,9 @@ import mods.simcraft.data.HomeManager;
 import mods.simcraft.data.MarketManager;
 import mods.simcraft.network.CommonProxy;
 import mods.simcraft.network.PacketPipeline;
+import mods.simcraft.player.PlayerEventListener;
+import mods.simcraft.player.PlayerHandler;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.SidedProxy;
@@ -35,16 +39,27 @@ public class SimCraft
     
     public static final PacketPipeline packetPipeline = new PacketPipeline();
     
+    private PlayerEventListener playerEventListener = new PlayerEventListener();
+    private PlayerHandler playerHandler = new PlayerHandler();
+    private PlayerEventListener events;
     public static CreativeTab tabBlocks;
     
     public static Content content;
     
+    public SimCraft()
+    {
+    	MinecraftForge.EVENT_BUS.register(events = new PlayerEventListener());
+    }
     @EventHandler
     public void preInit (FMLPreInitializationEvent event)
     {
     	tabBlocks = new CreativeTab("SimBlocks");
     	
     	content = new Content();
+    	
+    	NetworkRegistry.INSTANCE.registerGuiHandler(instance, proxy);
+    	
+        FMLCommonHandler.instance().bus().register(playerHandler);
     }
     
     @EventHandler
@@ -52,8 +67,6 @@ public class SimCraft
     {
     	packetPipeline.initalise();
     	packetPipeline.registerPackets();
-    	
-    	NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());
     	
     	proxy.registerHandlers();
     	
@@ -70,6 +83,7 @@ public class SimCraft
     public void serverStart(FMLServerStartingEvent event)
     {
     	HomeManager.loadAllHomes();
+    	MarketManager.loadMarketDefaultPrices();
     	MarketManager.loadMarketPlace();
     }
 }

@@ -9,7 +9,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
 import org.lwjgl.opengl.GL11;
+import cpw.mods.fml.relauncher.SideOnly;
+import cpw.mods.fml.relauncher.Side;
 
+@SideOnly(Side.CLIENT)
 public class BuildingGui extends GuiScreen {
 	
 	private SimObjectTileEntity teHome;

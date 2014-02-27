@@ -1,54 +1,54 @@
 package mods.simcraft.client.gui;
 
 import mods.simcraft.SimCraft;
+import mods.simcraft.inventory.MarketContainer;
+import mods.simcraft.network.packet.PacketMarketItemPriceCheck;
+import mods.simcraft.network.packet.PacketMarketSellItems;
 import mods.simcraft.tileentity.MarketTileEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ChatComponentText;
 
 import org.lwjgl.opengl.GL11;
 
-public class MarketGui extends GuiScreen
+import cpw.mods.fml.relauncher.SideOnly;
+import cpw.mods.fml.relauncher.Side;
+
+@SideOnly(Side.CLIENT)
+public class MarketGui extends GuiContainer
 {
-	private EntityPlayer playerPar1;
+	public int totalPrice; //Sets from a Packet Sending Results from Calculate button
 	private int xCoord;
 	private int yCoord;
 	private int zCoord;
-	private MarketTileEntity tileHome;
+	private MarketTileEntity tile;
 	
-	private int xSize = 176;
-    private int ySize = 168;
+	private static int xSize = 176;
+    private static int ySize = 168;
 	
-	public MarketGui(EntityPlayer player, MarketTileEntity tile, int x, int y, int z) {
-		playerPar1 = player;
+	public MarketGui(InventoryPlayer  player, MarketTileEntity par1Tile, int x, int y, int z)
+	{
+    	super(new MarketContainer(player, par1Tile));
 		xCoord = x;
 		yCoord = y;
 		zCoord = z;
-		tileHome = tile;
+		tile = par1Tile;
 	}
 
 	@Override 
 	public void initGui()
 	{
 		this.buttonList.add(new GuiButton(10, this.width - 50, 5, 45, 20, "Close"));
-	}
-	
-	@Override
-	public void drawScreen(int x, int y, float f) {
-		drawDefaultBackground();
 		
-		GL11.glColor4f(1F, 1F, 1F, 1F);
+		this.buttonList.add(new GuiButton(1, this.width - 150, 55, 45, 20, "Calculate"));
 		
-		this.mc.renderEngine.bindTexture(GuiResourceFile.guiMarket);
-		
-		int totalX = (width - xSize) / 2;
-        int totalY = (height - ySize) / 2;
-        drawTexturedModalRect(totalX, totalY, 0, 0, xSize, ySize);
-        
-		super.drawScreen(x, y, f);
+		this.buttonList.add(new GuiButton(2, this.width - 150, 85, 45, 20, "Sell Items"));
 	}
 	
 	@Override
@@ -59,10 +59,36 @@ public class MarketGui extends GuiScreen
 	
 	public void actionPerformed(GuiButton button)
 	{
-		if (button.id == 10)
+		if (button.id == 1)
+		{
+			SimCraft.packetPipeline.sendToServer(new PacketMarketItemPriceCheck(tile.chestContents));
+		}
+		else if (button.id == 2)
+		{
+			SimCraft.packetPipeline.sendToServer(new PacketMarketSellItems(tile));
+		}
+		else if (button.id == 10)
 		{
 			Minecraft.getMinecraft().thePlayer.closeScreen();
 		}
+	}
+	
+	@Override
+    protected void drawGuiContainerForegroundLayer (int par1, int par2)
+    {
+        
+    }
+
+	@Override
+	protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3) 
+	{
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		
+		this.mc.getTextureManager().bindTexture(GuiResourceFile.guiMarket);
+		
+		int totalX = (width - xSize) / 2;
+        int totalY = (height - ySize) / 2;
+        drawTexturedModalRect(totalX, totalY, 0, 0, xSize, ySize);
 	}
 }
 

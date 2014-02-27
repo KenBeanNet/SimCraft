@@ -23,7 +23,10 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
+import cpw.mods.fml.relauncher.SideOnly;
+import cpw.mods.fml.relauncher.Side;
 
+@SideOnly(Side.CLIENT)
 public class HomeGui extends GuiScreen
 {
 	private EntityPlayer playerPar1;
