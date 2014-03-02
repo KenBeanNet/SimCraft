@@ -12,7 +12,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 
-public class MarketBlock extends BlockContainer  
+public class MarketBlock extends SimObjectBlock  
 {
 	public MarketBlock(Material par1Material)
 	{

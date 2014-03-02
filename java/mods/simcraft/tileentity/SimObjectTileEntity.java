@@ -11,6 +11,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class SimObjectTileEntity extends TileEntity 
 {
@@ -43,7 +44,7 @@ public class SimObjectTileEntity extends TileEntity
 	protected int timeLeft;
 	protected int delay;
 	protected int level;
-	private int direction;
+	private byte direction;
 	protected boolean sentBuildCommands = false;
 	
 	public SimObjectTileEntity(int par1BuildTime)
@@ -112,7 +113,7 @@ public class SimObjectTileEntity extends TileEntity
 		buildTime = nbt.getInteger(NBT_BUILD_TIME);
 		timeLeft = nbt.getInteger(NBT_TIME_LEFT);
 		level = nbt.getInteger(NBT_LEVEL);
-		direction = nbt.getInteger(NBT_DIRECTION);
+		direction = nbt.getByte(NBT_DIRECTION);
 	}
 	
 	public void writeToNBT(NBTTagCompound nbt)
@@ -123,7 +124,7 @@ public class SimObjectTileEntity extends TileEntity
 		nbt.setInteger(NBT_BUILD_TIME, buildTime);
 		nbt.setInteger(NBT_TIME_LEFT, timeLeft);
 		nbt.setInteger(NBT_LEVEL, level);
-		nbt.setInteger(NBT_DIRECTION, direction);
+		nbt.setByte(NBT_DIRECTION, direction);
 	}
 	
 
@@ -142,9 +143,8 @@ public class SimObjectTileEntity extends TileEntity
 		return level;
 	}
 	
-	public void setDirection(int var1) { this.direction = var1; }
-    public int getDirection() { return this.direction; }
-
+	public void setDirection(byte var1) { this.direction = var1; }
+    public byte getDirection() { return this.direction; }
 
 	
 	@Override
@@ -171,4 +171,29 @@ public class SimObjectTileEntity extends TileEntity
 		if (buildingTasks.size() > 0)
 			delay = buildTime / buildingTasks.size();
 	}
+	
+	public void rotateAround(ForgeDirection axis)
+    {
+		setDirection((byte)ForgeDirection.getOrientation(direction).getRotation(axis).ordinal());
+        worldObj.addBlockEvent(this.xCoord, this.yCoord, this.zCoord, null, 2, getDirection());
+    }
+	
+	@Override
+    public boolean receiveClientEvent(int i, int j)
+    {
+        if (i == 1)
+        {
+            //numUsingPlayers = j;
+        }
+        else if (i == 2)
+        {
+        	direction = (byte) j;
+        }
+        else if (i == 3)
+        {
+        	direction = (byte) (j & 0x7);
+            //numUsingPlayers = (j & 0xF8) >> 3;
+        }
+        return true;
+    }
 }

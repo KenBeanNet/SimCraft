@@ -15,6 +15,7 @@ import org.apache.logging.log4j.Level;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.MathHelper;
 import mods.simcraft.SimCraft;
 import mods.simcraft.common.Home;
 import mods.simcraft.tileentity.MarketTileEntity;
@@ -148,6 +149,25 @@ public class MarketManager
 				totalPrice += items.get(s) * 2;
 		}
 		return totalPrice;
+	}
+	
+	public static int getTaxOnPrice(int marketLevel, int totalPrice)
+	{
+		int taxLevel = 0;
+		switch (marketLevel)
+		{
+			case 1:
+			{
+				taxLevel = 50;
+				break;
+			}
+			case 2:
+			{
+				taxLevel = 40;
+				break;
+			}
+		}
+		return MathHelper.floor_double(totalPrice * (float)(taxLevel / .100));
 	}
 	
 	public static void setDefaultPrice(EntityPlayer player, Item item, int par2Price)

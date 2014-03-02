@@ -10,9 +10,10 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.Explosion;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class HomeBlock extends BlockContainer 
+public class HomeBlock extends SimObjectBlock 
 {
 	public HomeBlock(Material par1Material)
 	{
@@ -66,6 +67,12 @@ public class HomeBlock extends BlockContainer
     {
         return 0;
     }
+	
+	@Override
+	public boolean shouldSideBeRendered(IBlockAccess iblockaccess, int i, int j, int k, int l)
+	{
+	   return false;
+	}
 	
 	@Override
 	public boolean canDropFromExplosion(Explosion par1Explosion)

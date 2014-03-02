@@ -11,26 +11,39 @@ import net.minecraft.item.ItemStack;
 
 public class MarketContainer extends Container 
 {
+	private int numRows;
 	MarketTileEntity tile;
+	
     public MarketContainer(IInventory playerInventory, MarketTileEntity chestInventory)
     {
     	tile = chestInventory;
     	//the Slot constructor takes the IInventory and the slot number in that it binds to
         //and the x-y coordinates it resides on-screen
-        for (int i = 0; i < 3; i++) {
-                for (int j = 0; j < 2; j++) {
-                        addSlotToContainer(new Slot(chestInventory, j + i * 3,  187 + i * 18, 63 + j * 18));
-                }
-        }
-        
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 9; j++) {
-                    addSlotToContainer(new Slot(playerInventory, j + i * 9 + 9, 133 + j * 18, 122 + i * 18));
+    	this.numRows = chestInventory.getSizeInventory() / 3;
+    	chestInventory.openInventory();
+        int i = (this.numRows - 4) * 18;
+        int j;
+        int k;
+
+        for (j = 0; j < this.numRows; ++j)
+        {
+            for (k = 0; k < 3; ++k)
+            {
+                this.addSlotToContainer(new Slot(chestInventory, k + j * 3, 8 + k * 18, 18 + j * 18));
             }
         }
 
-        for (int i = 0; i < 9; i++) {
-            addSlotToContainer(new Slot(playerInventory, i, 133 + i * 18, 180));
+        for (j = 0; j < 3; ++j)
+        {
+            for (k = 0; k < 9; ++k)
+            {
+                this.addSlotToContainer(new Slot(playerInventory, k + j * 9 + 9, 8 + k * 18, 103 + j * 18 + i));
+            }
+        }
+
+        for (j = 0; j < 9; ++j)
+        {
+            this.addSlotToContainer(new Slot(playerInventory, j, 8 + j * 18, 161 + i));
         }
     }
 
@@ -53,12 +66,12 @@ public class MarketContainer extends Container
 
                 //merges the item into player inventory since its in the tileEntity
                 if (slot < 6) {
-                        if (!this.mergeItemStack(stackInSlot, 9, 45, true)) {
+                        if (!this.mergeItemStack(stackInSlot, 6, 42, true)) {
                                 return null;
                         }
                 }
                 //places it into the tileEntity is possible since its in the player inventory
-                else if (!this.mergeItemStack(stackInSlot, 0, 9, false)) {
+                else if (!this.mergeItemStack(stackInSlot, 0, 6, false)) {
                         return null;
                 }
 

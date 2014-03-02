@@ -12,6 +12,7 @@ import mods.simcraft.data.MarketManager;
 import mods.simcraft.network.PacketPipeline;
 import mods.simcraft.network.SimPacket;
 import mods.simcraft.tileentity.HomeTileEntity;
+import mods.simcraft.tileentity.MarketTileEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -22,16 +23,18 @@ import net.minecraft.world.World;
 public class PacketMarketItemPriceCheck extends SimPacket {
 
 	private HashMap<String, Integer> items = new HashMap<String, Integer>();
-	
+	private MarketTileEntity tile;
 	public PacketMarketItemPriceCheck() 
 	{
 	}
 
-	public PacketMarketItemPriceCheck(ItemStack[] par1Items) 
+	public PacketMarketItemPriceCheck(MarketTileEntity par1Tile) 
 	{
-		for (ItemStack s : par1Items)
+		tile = par1Tile;
+		for (ItemStack s : tile.chestContents)
 		{
-			items.put(s.getUnlocalizedName(), s.stackSize);
+			if (s != null)
+				items.put(s.getUnlocalizedName(), s.stackSize);
 		}
 	}
 
@@ -65,8 +68,9 @@ public class PacketMarketItemPriceCheck extends SimPacket {
 	public void handleServerSide(EntityPlayer player) 
 	{
 		int totalPrice = MarketManager.getPriceCheck(items);
-		
-		SimCraft.packetPipeline.sendTo(new PacketMarketItemPriceCheckResult(totalPrice), (EntityPlayerMP)player);
+		int totalTax = MarketManager.getTaxOnPrice(tile.getLevel(), totalPrice);
+		int totalProfit = totalPrice - totalTax;
+		SimCraft.packetPipeline.sendTo(new PacketMarketItemPriceCheckResult(totalPrice, totalTax, totalProfit), (EntityPlayerMP)player);
 	}
 
 }

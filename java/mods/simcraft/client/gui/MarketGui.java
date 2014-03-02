@@ -1,6 +1,7 @@
 package mods.simcraft.client.gui;
 
 import mods.simcraft.SimCraft;
+import mods.simcraft.data.HomeManager;
 import mods.simcraft.inventory.MarketContainer;
 import mods.simcraft.network.packet.PacketMarketItemPriceCheck;
 import mods.simcraft.network.packet.PacketMarketSellItems;
@@ -24,6 +25,9 @@ import cpw.mods.fml.relauncher.Side;
 public class MarketGui extends GuiContainer
 {
 	public int totalPrice; //Sets from a Packet Sending Results from Calculate button
+	public int totalTax;
+	public int totalProfit;
+	
 	private int xCoord;
 	private int yCoord;
 	private int zCoord;
@@ -46,9 +50,9 @@ public class MarketGui extends GuiContainer
 	{
 		this.buttonList.add(new GuiButton(10, this.width - 50, 5, 45, 20, "Close"));
 		
-		this.buttonList.add(new GuiButton(1, this.width - 150, 55, 45, 20, "Calculate"));
+		this.buttonList.add(new GuiButton(1, this.width - 124, 60, 115, 20, "Calculate"));
 		
-		this.buttonList.add(new GuiButton(2, this.width - 150, 85, 45, 20, "Sell Items"));
+		this.buttonList.add(new GuiButton(2, this.width - 124, 85, 115, 20, "Sell Items"));
 	}
 	
 	@Override
@@ -61,7 +65,7 @@ public class MarketGui extends GuiContainer
 	{
 		if (button.id == 1)
 		{
-			SimCraft.packetPipeline.sendToServer(new PacketMarketItemPriceCheck(tile.chestContents));
+			SimCraft.packetPipeline.sendToServer(new PacketMarketItemPriceCheck(tile));
 		}
 		else if (button.id == 2)
 		{
@@ -76,7 +80,20 @@ public class MarketGui extends GuiContainer
 	@Override
     protected void drawGuiContainerForegroundLayer (int par1, int par2)
     {
-        
+		drawCenteredString(this.fontRendererObj, "MarketPlace!", this.width / 2, 10, 0x6699FF);
+		
+		drawString(this.fontRendererObj, "Market Stats", 10, 50, 0xFFCC00);
+		drawString(this.fontRendererObj, "Level " + tile.getLevel(), 10, 60, 0x66CC66);
+		drawString(this.fontRendererObj, "Tax 10%", 10, 70, 0x66CC66);
+		
+		if (totalPrice != 0)
+		{
+			drawString(this.fontRendererObj, "Price Check Results", this.width - 124, 110, 0xFFCC00);
+			drawString(this.fontRendererObj, "Total Value    " + totalPrice, this.width - 124, 120, 0x66CC66);
+			drawString(this.fontRendererObj, "Tax              " + totalTax, this.width - 124, 130, 0x66CC66);
+			drawString(this.fontRendererObj, "Payout          " + totalProfit, this.width - 124, 140, 0x66CC66);
+		}
+		
     }
 
 	@Override

@@ -20,20 +20,24 @@ import net.minecraft.world.World;
 public class PacketMarketItemPriceCheckResult extends SimPacket {
 
 	private int totalPrice;
+	private int totalTax;
+	private int totalProfit;
 	
 	public PacketMarketItemPriceCheckResult() 
 	{
 	}
 
-	public PacketMarketItemPriceCheckResult(int par1Price) 
+	public PacketMarketItemPriceCheckResult(int par1Price, int par2Tax, int par3Profit) 
 	{
 		totalPrice = par1Price;
+		totalTax = par2Tax;
+		totalProfit = par3Profit;
 	}
 
 	@Override
 	public void encodeInto(ChannelHandlerContext ctx, ByteBuf buffer) 
 	{
-		buffer.writeShort(totalPrice);
+		buffer.writeInt(totalPrice);
 	}
 
 	@Override
@@ -47,6 +51,8 @@ public class PacketMarketItemPriceCheckResult extends SimPacket {
 		{
 			MarketGui gui = (MarketGui)Minecraft.getMinecraft().currentScreen;
 			gui.totalPrice = totalPrice;
+			gui.totalTax = totalTax;
+			gui.totalProfit = totalProfit;
 		}
 	}
 
