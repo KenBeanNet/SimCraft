@@ -3,6 +3,7 @@ package mods.simcraft.tileentity;
 import java.util.Arrays;
 import java.util.Comparator;
 
+import mods.simcraft.SimCraft;
 import mods.simcraft.common.Repository;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -97,7 +98,6 @@ public class MarketTileEntity extends SimObjectTileEntity implements IInventory
 	@Override
 	public void closeInventory() {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override

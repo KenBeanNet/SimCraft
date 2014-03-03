@@ -27,7 +27,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import cpw.mods.fml.relauncher.Side;
 
 @SideOnly(Side.CLIENT)
-public class HomeGui extends GuiScreen
+public class HomeGui extends SimGui
 {
 	private EntityPlayer playerPar1;
 	private GuiTextField txtTownName;
@@ -35,10 +35,15 @@ public class HomeGui extends GuiScreen
 	private int xCoord;
 	private int yCoord;
 	private int zCoord;
+	private short homeType;
 	private HomeTileEntity tileHome;
 	
 	private GuiButton btnUpgradeLevel;
 	private GuiButton btnBuildHome;
+	
+	private GuiButton btnResidential;
+	private GuiButton btnCommercial;
+	private GuiButton btnIndustrial;
 	
 	public HomeGui(EntityPlayer player, HomeTileEntity tile, int x, int y, int z) {
 		playerPar1 = player;
@@ -51,18 +56,30 @@ public class HomeGui extends GuiScreen
 	@Override 
 	public void initGui()
 	{
-		txtTownName = new GuiTextField(this.fontRendererObj, 180 , this.height - 75, 100, 20);
+		super.initGui();
+		
+		txtTownName = new GuiTextField(this.fontRendererObj, 90 , 95, 100, 20);
 		txtTownName.setMaxStringLength(16);
 		
 		btnUpgradeLevel = new GuiButton(1, this.width - 124, 60, 115, 20, "Upgrade Level " + (tileHome.getLevel() + 1));
 		btnUpgradeLevel.visible = false;
 		this.buttonList.add(btnUpgradeLevel);
 		
-		btnBuildHome = new GuiButton(0, 195, this.height - 50, 65, 20, "Build");
+		btnBuildHome = new GuiButton(0, this.width / 2  - 60, this.height - 25, 120, 20, "Start Construction");
 		btnBuildHome.visible = false;
 		this.buttonList.add(btnBuildHome);
 		
-		this.buttonList.add(new GuiButton(10, this.width - 50, 5, 45, 20, "Close"));
+		btnResidential = new GuiButton(5, 88, 132, 60, 20, "Residential");
+		btnResidential.visible = false;
+		this.buttonList.add(btnResidential);
+		btnCommercial = new GuiButton(6, 148, 132, 60, 20, "Commercial");
+		btnCommercial.visible = false;
+		this.buttonList.add(btnCommercial);
+		btnIndustrial = new GuiButton(7, 208, 132, 60, 20, "Industrial");
+		btnIndustrial.visible = false;
+		this.buttonList.add(btnIndustrial);
+		
+		btnHelp.visible = true;
 	}
 	
 	@Override
@@ -102,16 +119,54 @@ public class HomeGui extends GuiScreen
 			
 			drawString(this.fontRendererObj, "How to Create a Home", 20, 40, 0xFF0033);
 			
-			drawString(this.fontRendererObj, "Creating a home is simple.  First you need to name your town below.", 30, 50, 0xFFCC66);
+			drawString(this.fontRendererObj, "Creating a home is simple.  First you need to name your home below.", 30, 50, 0xFFCC66);
 			drawString(this.fontRendererObj, "Then hit the create button.  Your home will start constructing!", 30, 60, 0xFFCC66);
 			drawString(this.fontRendererObj, "After it is fully built, you can upgrade your home to increase", 30, 70, 0xFFCC66);
 			drawString(this.fontRendererObj, "your total overall space.", 30, 80, 0xFFCC66);
 			
-			fontRendererObj.drawString("Name Of your Home : ", 65, this.height - 69, 0xFFFFFF, false);
+			fontRendererObj.drawString("Home Name : ", 20, 102, 0xFFFFFF, false);
+			
+			fontRendererObj.drawString("Home Type : ", 20, 140, 0xFFFFFF, false);
+			
+			fontRendererObj.drawString("Home Design : (Coming Soon)", 20, 178, 0xFFFFFF, false);
 		
 			txtTownName.drawTextBox();
 			
+			switch (homeType)
+			{
+				default:
+				{
+					btnResidential.packedFGColour = 0xFFFFFF;
+					btnCommercial.packedFGColour = 0xFFFFFF;
+					btnIndustrial.packedFGColour = 0xFFFFFF;
+					break;
+				}
+				case 1:
+				{
+					btnResidential.packedFGColour = 0x00FFFF;
+					btnCommercial.packedFGColour = 0xFFFFFF;
+					btnIndustrial.packedFGColour = 0xFFFFFF;
+					break;
+				}
+				case 2:
+				{
+					btnResidential.packedFGColour = 0xFFFFFF;
+					btnCommercial.packedFGColour = 0x00FFFF;
+					btnIndustrial.packedFGColour = 0xFFFFFF;
+					break;
+				}
+				case 3:
+				{
+					btnResidential.packedFGColour = 0xFFFFFF;
+					btnCommercial.packedFGColour = 0xFFFFFF;
+					btnIndustrial.packedFGColour = 0x00FFFF;
+					break;
+				}
+			}
 			btnBuildHome.visible = true;
+			btnResidential.visible = true;
+			btnCommercial.visible = true;
+			btnIndustrial.visible = true;
 		}
 		
 		super.drawScreen(x, y, f);
@@ -140,8 +195,10 @@ public class HomeGui extends GuiScreen
 		townName = txtTownName.getText();
 	}
 	
+	@Override
 	public void actionPerformed(GuiButton button)
 	{
+		super.actionPerformed(button);
 		if (button.id == 0)
 		{
 			Home h = HomeManager.getHomeByPlayerName(playerPar1.getDisplayName());
@@ -160,6 +217,7 @@ public class HomeGui extends GuiScreen
 				home.zCoord = zCoord;
 				home.ownerUsername = playerPar1.getDisplayName();
 				home.name = townName;
+				home.type = homeType;
 			
 				tileHome.build();
 				SimCraft.packetPipeline.sendToServer(new PacketCreateHome(home));
@@ -167,13 +225,15 @@ public class HomeGui extends GuiScreen
 				playerPar1.openGui(SimCraft.instance, 1, tileHome.getWorldObj(), xCoord, yCoord, zCoord);
 			}
 		}
-		else if (button.id == 5) //Show Raids
+		else if (button.id == 5)
+			homeType = 1;
+		else if (button.id == 6)
+			homeType = 2;
+		else if (button.id == 7)
+			homeType = 3;
+		else if (button.id == 9) //Help
 		{
-			playerPar1.openGui(SimCraft.instance, 5, tileHome.getWorldObj(), xCoord, yCoord, zCoord);
-		}
-		else if (button.id == 10)
-		{
-			Minecraft.getMinecraft().thePlayer.closeScreen();
+			
 		}
 	}
 	

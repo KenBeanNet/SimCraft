@@ -33,6 +33,7 @@ public class PacketCreateHome extends SimPacket {
 		buffer.writeInt(home.xCoord);
 		buffer.writeInt(home.yCoord);
 		buffer.writeInt(home.zCoord);
+		buffer.writeShort(home.type);
 	}
 
 	@Override
@@ -42,6 +43,7 @@ public class PacketCreateHome extends SimPacket {
     	home.xCoord = buffer.readInt();
     	home.yCoord = buffer.readInt();
     	home.zCoord = buffer.readInt();
+    	home.type = buffer.readShort();
 	}
 
 	@Override

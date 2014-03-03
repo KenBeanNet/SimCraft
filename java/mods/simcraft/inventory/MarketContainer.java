@@ -17,34 +17,13 @@ public class MarketContainer extends Container
     public MarketContainer(IInventory playerInventory, MarketTileEntity chestInventory)
     {
     	tile = chestInventory;
-    	//the Slot constructor takes the IInventory and the slot number in that it binds to
-        //and the x-y coordinates it resides on-screen
-    	this.numRows = chestInventory.getSizeInventory() / 3;
-    	chestInventory.openInventory();
-        int i = (this.numRows - 4) * 18;
-        int j;
-        int k;
-
-        for (j = 0; j < this.numRows; ++j)
-        {
-            for (k = 0; k < 3; ++k)
-            {
-                this.addSlotToContainer(new Slot(chestInventory, k + j * 3, 8 + k * 18, 18 + j * 18));
-            }
-        }
-
-        for (j = 0; j < 3; ++j)
-        {
-            for (k = 0; k < 9; ++k)
-            {
-                this.addSlotToContainer(new Slot(playerInventory, k + j * 9 + 9, 8 + k * 18, 103 + j * 18 + i));
-            }
-        }
-
-        for (j = 0; j < 9; ++j)
-        {
-            this.addSlotToContainer(new Slot(playerInventory, j, 8 + j * 18, 161 + i));
-        }
+    	for (int x = 0; x < 2; x++) {
+    		for (int y = 0; y < 3; y++) {
+    		addSlotToContainer(new Slot(chestInventory, y + x * 2, 8 + y * 18, 17 + x * 18));
+    		}
+    	}
+        
+        bindPlayerInventory((InventoryPlayer)playerInventory);
     }
 
     @Override
@@ -52,6 +31,19 @@ public class MarketContainer extends Container
     {
     	return tile.isUseableByPlayer(player);
     }
+    
+    protected void bindPlayerInventory(InventoryPlayer inventoryPlayer) {
+        for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 9; j++) {
+                        addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9,
+                                        8 + j * 18, 84 + i * 18));
+                }
+        }
+
+        for (int i = 0; i < 9; i++) {
+                addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 142));
+        }
+}
 
     @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int slot) 

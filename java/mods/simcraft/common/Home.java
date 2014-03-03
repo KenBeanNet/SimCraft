@@ -7,5 +7,6 @@ public class Home {
 	public int yCoord;
 	public int zCoord;
 	public int level;
+	public short type;
 	public int dimensionId;
 }

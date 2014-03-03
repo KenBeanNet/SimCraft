@@ -27,7 +27,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 public class SimCraft
 {
     public static final String MODID = "simcraft";
-    public static final String VERSION = "1.0";
+    public static final String VERSION = "0.1";
     public static final String CLIENT_PROXY = "mods.simcraft.network.ClientProxy";
     public static final String SERVER_PROXY = "mods.simcraft.network.CommonProxy";
     
