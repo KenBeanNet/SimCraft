@@ -43,6 +43,10 @@ public class SimCraft
     private PlayerHandler playerHandler = new PlayerHandler();
     private PlayerEventListener events;
     public static CreativeTab tabBlocks;
+    public static CreativeTab tabBricks;
+    public static CreativeTab tabFences;
+    public static CreativeTab tabCarpets;
+    public static CreativeTab tabFlowers;
     
     public static Content content;
     
@@ -54,6 +58,10 @@ public class SimCraft
     public void preInit (FMLPreInitializationEvent event)
     {
     	tabBlocks = new CreativeTab("SimBlocks");
+    	tabBricks = new CreativeTab("SimBricks");
+    	tabFences = new CreativeTab("SimFences");
+    	tabCarpets = new CreativeTab("SimCarpets");
+    	tabFlowers = new CreativeTab("SimFlowers");
     	
     	content = new Content();
     	
@@ -68,7 +76,11 @@ public class SimCraft
     	packetPipeline.registerPackets();
     	
     	
-    	tabBlocks.init(new ItemStack(Blocks.bedrock, 1, 0));
+    	tabBlocks.init(new ItemStack(Repository.homeBlock, 1));
+    	tabBricks.init(new ItemStack(Blocks.bedrock, 1));
+    	tabFences.init(new ItemStack(Blocks.fence, 1));
+    	tabCarpets.init(new ItemStack(Blocks.carpet, 1));
+    	tabFlowers.init(new ItemStack(Blocks.waterlily, 1));
     }
     
     @EventHandler

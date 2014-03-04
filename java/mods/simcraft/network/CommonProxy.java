@@ -54,6 +54,8 @@ public class CommonProxy implements IGuiHandler {
 				return new MarketContainer(player.inventory, (MarketTileEntity)world.getTileEntity(x, y, z));
 			case 3: 
 				return new DefaultContainer();
+			case 4:
+				return new DefaultContainer();
 		}
 		return null;
 	}

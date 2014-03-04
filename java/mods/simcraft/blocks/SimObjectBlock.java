@@ -55,11 +55,6 @@ public class SimObjectBlock extends BlockContainer {
             world.markBlockForUpdate(i, j, k);
         }
     }
-
-	@Override
-	public TileEntity createNewTileEntity(World var1, int var2) {
-		return null;
-	}
 	
 	private static final ForgeDirection[] validRotationAxes = new ForgeDirection[] { UP, DOWN };
     @Override
@@ -86,5 +81,11 @@ public class SimObjectBlock extends BlockContainer {
         }
         return false;
     }
+
+	@Override
+	public TileEntity createNewTileEntity(World var1, int var2) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
@@ -149,5 +150,53 @@ public class HomeManager {
 	public static boolean hasHome(String username)
 	{
 		return homeList.containsKey(username);
+	}
+	
+	public static List<Home> getHomesStartWith(String par1StartsWith)
+	{
+		List<Home> toReturn = Lists.newArrayList();
+		for (Home h : homeList.values())
+		{
+			if (h.ownerUsername.startsWith(par1StartsWith) || h.name.startsWith(par1StartsWith))
+			{
+				toReturn.add(h);
+			}
+			
+			if (toReturn.size() >= 9)
+				break;
+		}
+		
+		return toReturn;
+	}
+	
+	public static String getHomeTypeFromInt(int value)
+	{
+		switch (value)
+		{
+			case 1:
+				return "Residential";
+			case 2:
+				return "Commercial";
+			case 3:
+				return "Industrial";
+			default:
+				return "";
+		}
+	}
+	
+	public static void setHomeOffline(String playerName)
+	{
+		if (homeList.containsKey(playerName))
+		{
+			homeList.get(playerName).isOnline = false;
+		}
+	}
+	
+	public static void setHomeOnline(String playerName)
+	{
+		if (homeList.containsKey(playerName))
+		{
+			homeList.get(playerName).isOnline = true;
+		}
 	}
 }

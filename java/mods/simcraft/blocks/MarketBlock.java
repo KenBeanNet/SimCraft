@@ -31,12 +31,12 @@ public class MarketBlock extends SimObjectBlock
 	    {
 	    	MarketTileEntity teHome = (MarketTileEntity)par1World.getTileEntity(par2, par3, par4);
 	    	
-	    	//if (teHome.isCompleted())
+	    	if (teHome.isCompleted())
 	    	{
 	    		par5EntityPlayer.openGui(SimCraft.instance, 2, par1World, par2, par3, par4);
 	    	}
-	    	//else
-	    		//par5EntityPlayer.openGui(SimCraft.instance, 1, par1World, par2, par3, par4);
+	    	else
+	    		par5EntityPlayer.openGui(SimCraft.instance, 1, par1World, par2, par3, par4);
 	    	
 	        return true;
 	    }

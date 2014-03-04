@@ -8,5 +8,6 @@ public class Home {
 	public int zCoord;
 	public int level;
 	public short type;
+	public boolean isOnline = false;
 	public int dimensionId;
 }

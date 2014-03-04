@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 import java.io.File;
 
 import mods.simcraft.client.gui.BuildingGui;
+import mods.simcraft.client.gui.HomeCenterGui;
 import mods.simcraft.client.gui.HomeGui;
 import mods.simcraft.client.gui.MarketBuyGui;
 import mods.simcraft.client.gui.MarketSellGui;
@@ -62,6 +63,8 @@ public class ClientProxy extends CommonProxy
 				return new MarketSellGui(player, (MarketTileEntity)world.getTileEntity(x, y, z), x, y, z);
 			case 3:
 				return new MarketBuyGui(player, (MarketTileEntity)world.getTileEntity(x, y, z), x, y, z);
+			case 4:
+				return new HomeCenterGui(player);
 		}
 		return null;
 	}
