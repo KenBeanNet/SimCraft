@@ -103,7 +103,7 @@ public class MarketTileEntity extends SimObjectTileEntity implements IInventory
 	@Override
 	public boolean isItemValidForSlot(int var1, ItemStack var2) {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 	
 	@Override

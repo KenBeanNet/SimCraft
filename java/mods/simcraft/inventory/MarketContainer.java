@@ -33,7 +33,7 @@ public class MarketContainer extends Container
         {
             for (int chestCol = 0; chestCol < 3; chestCol++)
             {
-                addSlotToContainer(new Slot(chestInventory, chestCol + chestRow * 3, 12 + chestCol * 18, 8 + chestRow * 18));
+                addSlotToContainer(new Slot(chestInventory, chestCol + chestRow * 2, 12 + chestCol * 18, 8 + chestRow * 18));
             }
         }
     	
@@ -43,13 +43,13 @@ public class MarketContainer extends Container
         for (int y = 0; y < rows; y++) {
             for (int x = 0; x < cols; x++) {
                 // Slot params: id, x-coord, y-coord (coords are relative to gui box)
-                addSlotToContainer(new Slot(playerInventory, x + (y + 1) * cols, 100 + x * 18, 100 + y * 18));
+                addSlotToContainer(new Slot(playerInventory, x + (y + 1) * cols, 133 + x * 18, 122 + y * 18));
             }
         }
         
         // Player hotbar
         for (int x = 0; x < cols; x++) {
-            addSlotToContainer(new Slot(playerInventory, x, 150 + x * 18, 150));
+            addSlotToContainer(new Slot(playerInventory, x, 133 + x * 18, 179));
         }
 }
 
