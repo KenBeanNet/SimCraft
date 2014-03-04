@@ -10,5 +10,17 @@
     "sounds": [
       "constructiondone"
     ]
+  },
+"coins1": {
+    "category": "player",
+    "sounds": [
+      "coins1"
+    ]
+  },
+"levelup": {
+    "category": "player",
+    "sounds": [
+      "levelup"
+    ]
   }
 }

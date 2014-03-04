@@ -2,7 +2,9 @@ package mods.simcraft.player;
 
 import mods.simcraft.data.JobManager;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemPickaxe;
+import net.minecraft.item.ItemSpade;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
 import net.minecraft.util.ChatComponentText;
@@ -59,10 +61,10 @@ public class PlayerEventListener {
 					if (heldStack.getItem() instanceof ItemTool)
 					{
 						ItemTool pick = (ItemTool)heldStack.getItem();
-						if (pick != null)
-						{
-							player.addExcavator(pick.func_150913_i().getHarvestLevel());
-						}
+						if (pick instanceof ItemPickaxe)
+							player.addExcavator(Math.max(1, pick.func_150913_i().getHarvestLevel() * 2));
+						else if (pick instanceof ItemAxe || pick instanceof ItemSpade)
+							player.addLogger(Math.max(1, pick.func_150913_i().getHarvestLevel() * 2));
 					}
 				}
 			}
@@ -82,9 +84,14 @@ public class PlayerEventListener {
         		ItemTool tool = (ItemTool)event.entityPlayer.inventory.getCurrentItem().getItem();
         		if (player != null)
         		{
-        			if (JobManager.getLevelByExp(player.getExcavator()) < tool.func_150913_i().getHarvestLevel())
+        			if (tool instanceof ItemPickaxe && JobManager.getLevelByExp(player.getExcavatorLevel()) < tool.func_150913_i().getHarvestLevel() + 1)
         			{
         				event.entityPlayer.addChatMessage(new ChatComponentText("You must be a higher Excavator before using this tool!"));
+        				event.setCanceled(true);
+        			}
+        			else if ((tool instanceof ItemAxe || tool instanceof ItemSpade) && JobManager.getLevelByExp(player.getExcavatorLevel()) < tool.func_150913_i().getHarvestLevel() + 1)
+        			{
+        				event.entityPlayer.addChatMessage(new ChatComponentText("You must be a higher Logger before using this tool!"));
         				event.setCanceled(true);
         			}
         		}

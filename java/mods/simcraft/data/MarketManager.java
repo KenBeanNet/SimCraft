@@ -7,11 +7,14 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.logging.log4j.Level;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -74,7 +77,7 @@ public class MarketManager
 			//This is OK, just means no items in the MarketPlace yet.
 		}
 		
-		System.out.println("Loaded " + itemList.size() + " item(s) prices from Default Market");
+		System.out.println("Loaded " + defaultItemPrice.size() + " item(s) prices from Default Market");
 	}
 	public static void saveMarketDefaultPrices()
 	{
@@ -181,6 +184,9 @@ public class MarketManager
 	{
 		for (ItemStack s : tile.chestContents)
 		{
+			if (s == null)
+				continue;
+			
 			if (itemList.containsKey(s.getUnlocalizedName()))
 			{
 				itemList.get(s.getUnlocalizedName()).count += s.stackSize;
@@ -197,5 +203,20 @@ public class MarketManager
 		tile.soldItems(); // Clear the Inventory and kill the items.
 		saveMarketPlace(); // Save the data in the database.
 		return true;
+	}
+	
+	public static ItemStack[] getItems(int pageNumber) 
+	{
+		ItemStack[] toReturn = new ItemStack[9];
+		for (int i = 0; i < 9; i++)
+		{
+			List<String> keysAsArray = new ArrayList<String>(itemList.keySet());
+			if (keysAsArray.size() > i + (pageNumber * 9))
+			{
+				MarketItem item = itemList.get(keysAsArray.get(i + (pageNumber * 9)));
+				toReturn[i] = new ItemStack(Block.getBlockFromName(item.item), item.count);
+			}
+		}
+		return toReturn;
 	}
 }

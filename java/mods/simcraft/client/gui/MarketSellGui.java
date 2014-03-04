@@ -22,12 +22,13 @@ import cpw.mods.fml.relauncher.SideOnly;
 import cpw.mods.fml.relauncher.Side;
 
 @SideOnly(Side.CLIENT)
-public class MarketGui extends GuiContainer
+public class MarketSellGui extends GuiContainer
 {
 	public int totalPrice; //Sets from a Packet Sending Results from Calculate button
 	public int totalTax;
 	public int totalProfit;
 	
+	private EntityPlayer player;
 	private int xCoord;
 	private int yCoord;
 	private int zCoord;
@@ -36,9 +37,10 @@ public class MarketGui extends GuiContainer
 	private static int xSize = 176;
     private static int ySize = 168;
 	
-	public MarketGui(InventoryPlayer  player, MarketTileEntity par1Tile, int x, int y, int z)
+	public MarketSellGui(EntityPlayer par1Player, MarketTileEntity par1Tile, int x, int y, int z)
 	{
-    	super(new MarketContainer(player, par1Tile));
+    	super(new MarketContainer(par1Player.inventory, par1Tile));
+    	player = par1Player;
 		xCoord = x;
 		yCoord = y;
 		zCoord = z;
@@ -49,6 +51,8 @@ public class MarketGui extends GuiContainer
 	public void initGui()
 	{
 		this.buttonList.add(new GuiButton(10, this.width - 50, 5, 45, 20, "Close"));
+		
+		this.buttonList.add(new GuiButton(3, this.width - 124, 35, 115, 20, "Buy Items"));
 		
 		this.buttonList.add(new GuiButton(1, this.width - 124, 60, 115, 20, "Calculate"));
 		
@@ -71,6 +75,10 @@ public class MarketGui extends GuiContainer
 		{
 			SimCraft.packetPipeline.sendToServer(new PacketMarketSellItems(tile));
 		}
+		else if (button.id == 3)
+		{
+			player.openGui(SimCraft.instance, 3, tile.getWorldObj(), xCoord, yCoord, zCoord);
+		}
 		else if (button.id == 10)
 		{
 			Minecraft.getMinecraft().thePlayer.closeScreen();
@@ -83,7 +91,7 @@ public class MarketGui extends GuiContainer
 		drawCenteredString(this.fontRendererObj, "MarketPlace!", this.width / 2, 10, 0x6699FF);
 		
 		drawString(this.fontRendererObj, "Market Stats", 10, 50, 0xFFCC00);
-		drawString(this.fontRendererObj, "Level " + tile.getLevel(), 10, 60, 0x66CC66);
+		//drawString(this.fontRendererObj, "Level " + tile.getLevel(), 10, 60, 0x66CC66);
 		drawString(this.fontRendererObj, "Tax 10%", 10, 70, 0x66CC66);
 		
 		if (totalPrice != 0)

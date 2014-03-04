@@ -24,6 +24,9 @@ public class PacketMarketItemPriceCheck extends SimPacket {
 
 	private HashMap<String, Integer> items = new HashMap<String, Integer>();
 	private MarketTileEntity tile;
+	private int xCoord;
+	private int yCoord;
+	private int zCoord;
 	public PacketMarketItemPriceCheck() 
 	{
 	}
@@ -41,6 +44,9 @@ public class PacketMarketItemPriceCheck extends SimPacket {
 	@Override
 	public void encodeInto(ChannelHandlerContext ctx, ByteBuf buffer) 
 	{
+		buffer.writeInt(tile.xCoord);
+		buffer.writeInt(tile.yCoord);
+		buffer.writeInt(tile.zCoord);
 		buffer.writeShort(items.size());
 		for (String s : items.keySet())
 		{
@@ -51,6 +57,9 @@ public class PacketMarketItemPriceCheck extends SimPacket {
 
 	@Override
 	public void decodeInto(ChannelHandlerContext ctx, ByteBuf buffer) {
+		xCoord = buffer.readInt();
+		yCoord = buffer.readInt();
+		zCoord = buffer.readInt();
 		short length = buffer.readShort();
 		for (int i = 0; i < length; i++)
 		{
@@ -68,9 +77,15 @@ public class PacketMarketItemPriceCheck extends SimPacket {
 	public void handleServerSide(EntityPlayer player) 
 	{
 		int totalPrice = MarketManager.getPriceCheck(items);
-		int totalTax = MarketManager.getTaxOnPrice(tile.getLevel(), totalPrice);
-		int totalProfit = totalPrice - totalTax;
-		SimCraft.packetPipeline.sendTo(new PacketMarketItemPriceCheckResult(totalPrice, totalTax, totalProfit), (EntityPlayerMP)player);
+		TileEntity te = player.worldObj.getTileEntity(xCoord, yCoord, zCoord);
+		if (te instanceof MarketTileEntity)
+		{
+			tile = (MarketTileEntity)te;
+			//int totalTax = MarketManager.getTaxOnPrice(tile.getLevel(), totalPrice);
+			//int totalProfit = totalPrice - totalTax;
+			//SimCraft.packetPipeline.sendTo(new PacketMarketItemPriceCheckResult(totalPrice, totalTax, totalProfit), (EntityPlayerMP)player);
+		}
+		
 	}
 
 }

@@ -5,7 +5,7 @@ import java.util.HashMap;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
-import mods.simcraft.client.gui.MarketGui;
+import mods.simcraft.client.gui.MarketSellGui;
 import mods.simcraft.common.Home;
 import mods.simcraft.data.HomeManager;
 import mods.simcraft.data.MarketManager;
@@ -47,9 +47,9 @@ public class PacketMarketItemPriceCheckResult extends SimPacket {
 
 	@Override
 	public void handleClientSide(EntityPlayer player) {
-		if (Minecraft.getMinecraft().currentScreen instanceof MarketGui)
+		if (Minecraft.getMinecraft().currentScreen instanceof MarketSellGui)
 		{
-			MarketGui gui = (MarketGui)Minecraft.getMinecraft().currentScreen;
+			MarketSellGui gui = (MarketSellGui)Minecraft.getMinecraft().currentScreen;
 			gui.totalPrice = totalPrice;
 			gui.totalTax = totalTax;
 			gui.totalProfit = totalProfit;

@@ -10,7 +10,13 @@ import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
 
 import mods.simcraft.network.packet.PacketCreateHome;
+import mods.simcraft.network.packet.PacketExtendedInfo;
 import mods.simcraft.network.packet.PacketHomeInfo;
+import mods.simcraft.network.packet.PacketMarketBuyList;
+import mods.simcraft.network.packet.PacketMarketBuyOpen;
+import mods.simcraft.network.packet.PacketMarketItemPriceCheck;
+import mods.simcraft.network.packet.PacketMarketItemPriceCheckResult;
+import mods.simcraft.network.packet.PacketMarketSellItems;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -55,6 +61,12 @@ public class PacketPipeline extends MessageToMessageCodec<FMLProxyPacket, SimPac
 	public void registerPackets() {
 		registerPacket(PacketHomeInfo.class);
 		registerPacket(PacketCreateHome.class);
+		registerPacket(PacketExtendedInfo.class);
+		registerPacket(PacketMarketItemPriceCheck.class);
+		registerPacket(PacketMarketItemPriceCheckResult.class);
+		registerPacket(PacketMarketSellItems.class);
+		registerPacket(PacketMarketBuyOpen.class);
+		registerPacket(PacketMarketBuyList.class);
 	}
 	
     /**

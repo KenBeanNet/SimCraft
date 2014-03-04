@@ -58,6 +58,7 @@ public class SimObjectTileEntity extends TileEntity
 	@Override
 	public void updateEntity()
 	{
+		super.updateEntity();
 		if (timeLeft > 0)
 		{
 			timeLeft -= 1;
@@ -108,8 +109,8 @@ public class SimObjectTileEntity extends TileEntity
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-		if (nbt.hasKey(NBT_OWNER_NAME))
-			owner = nbt.getString(NBT_OWNER_NAME);
+		//if (nbt.hasKey(NBT_OWNER_NAME))
+			//owner = nbt.getString(NBT_OWNER_NAME);
 		buildTime = nbt.getInteger(NBT_BUILD_TIME);
 		timeLeft = nbt.getInteger(NBT_TIME_LEFT);
 		level = nbt.getInteger(NBT_LEVEL);
@@ -119,8 +120,8 @@ public class SimObjectTileEntity extends TileEntity
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-		if (!owner.isEmpty())
-			nbt.setString(NBT_OWNER_NAME, owner);
+		//if (!owner.isEmpty())
+			//nbt.setString(NBT_OWNER_NAME, owner);
 		nbt.setInteger(NBT_BUILD_TIME, buildTime);
 		nbt.setInteger(NBT_TIME_LEFT, timeLeft);
 		nbt.setInteger(NBT_LEVEL, level);
@@ -152,7 +153,7 @@ public class SimObjectTileEntity extends TileEntity
 	{
 		NBTTagCompound tileTag = new NBTTagCompound();
 		this.writeToNBT(tileTag);
-		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 1, tileTag);
+		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 0, tileTag);
 	}
 	
 	@Override

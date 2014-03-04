@@ -57,7 +57,6 @@ public class SimCraft
     	
     	content = new Content();
     	
-    	NetworkRegistry.INSTANCE.registerGuiHandler(instance, proxy);
     	
         FMLCommonHandler.instance().bus().register(playerHandler);
     }
@@ -68,7 +67,6 @@ public class SimCraft
     	packetPipeline.initalise();
     	packetPipeline.registerPackets();
     	
-    	proxy.registerHandlers();
     	
     	tabBlocks.init(new ItemStack(Blocks.bedrock, 1, 0));
     }
@@ -77,6 +75,14 @@ public class SimCraft
     public void postInitialise(FMLPostInitializationEvent evt) 
     {
         packetPipeline.postInitialise();
+    }
+    
+    @EventHandler
+    public void load(FMLInitializationEvent evt)
+    {
+    	proxy.registerHandlers();
+    	NetworkRegistry.INSTANCE.registerGuiHandler(instance, proxy);
+    	MinecraftForge.EVENT_BUS.register(this);
     }
     
     @EventHandler

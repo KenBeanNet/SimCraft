@@ -10,16 +10,17 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.Constants;
 
-public class MarketTileEntity extends SimObjectTileEntity implements IInventory
+public class MarketTileEntity extends TileEntity implements IInventory
 {
 	public static final int BUILD_TIME = 500;
 	
 	public ItemStack[] chestContents;
 	
 	public MarketTileEntity() {
-		super(BUILD_TIME);
+		//super(BUILD_TIME);
 		
 		this.chestContents = new ItemStack[getSizeInventory()];
 	}
@@ -64,8 +65,7 @@ public class MarketTileEntity extends SimObjectTileEntity implements IInventory
 		chestContents[slot] = stack;
         if (stack != null && stack.stackSize > getInventoryStackLimit()) {
                 stack.stackSize = getInventoryStackLimit();
-        }     
-		
+        }
 	}
 
 	@Override
@@ -103,40 +103,41 @@ public class MarketTileEntity extends SimObjectTileEntity implements IInventory
 	@Override
 	public boolean isItemValidForSlot(int var1, ItemStack var2) {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 	
 	@Override
 	public void readFromNBT(NBTTagCompound tagCompound) {
 		super.readFromNBT(tagCompound);
 		
-		NBTTagList tagList = tagCompound.getTagList("Inventory", Constants.NBT.TAG_COMPOUND);
-		for (int i = 0; i < tagList.tagCount(); i++) {
-			NBTTagCompound tag = (NBTTagCompound) tagList.getCompoundTagAt(i);
-			byte slot = tag.getByte("Slot");
-			if (slot >= 0 && slot < chestContents.length) {
-				chestContents[slot] = ItemStack.loadItemStackFromNBT(tag);
-			}
-		}
+        NBTTagList nbttaglist = tagCompound.getTagList("Items", Constants.NBT.TAG_COMPOUND);
+        chestContents = new ItemStack[getSizeInventory()];
+        for (int i = 0; i < nbttaglist.tagCount(); i++)
+        {
+            NBTTagCompound nbttagcompound1 = nbttaglist.getCompoundTagAt(i);
+            int j = nbttagcompound1.getByte("Slot") & 0xff;
+            if (j >= 0 && j < chestContents.length)
+            {
+                chestContents[j] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
+            }
+        }
 	}
 	
 	@Override
 	public void writeToNBT(NBTTagCompound tagCompound) {
 		super.writeToNBT(tagCompound);
-		
-		NBTTagList itemList = new NBTTagList();
-		for (int i = 0; i < chestContents.length; i++) {
-			ItemStack stack = chestContents[i];
-			if (stack != null) {
-				NBTTagCompound tag = new NBTTagCompound();
-				tag.setByte("Slot", (byte) i);
-				stack.writeToNBT(tag);
-				itemList.appendTag(tag);
-			}
-		}
-		tagCompound.setTag("Inventory", itemList);
+        NBTTagList nbttaglist = new NBTTagList();
+        for (int i = 0; i < chestContents.length; i++)
+        {
+            if (chestContents[i] != null)
+            {
+                NBTTagCompound nbttagcompound1 = new NBTTagCompound();
+                nbttagcompound1.setByte("Slot", (byte) i);
+                chestContents[i].writeToNBT(nbttagcompound1);
+                nbttaglist.appendTag(nbttagcompound1);
+            }
+        }
 	}
-	
 	public void soldItems()
 	{
 		this.chestContents = new ItemStack[getSizeInventory()];

@@ -17,8 +17,7 @@ public class MarketBlock extends SimObjectBlock
 	public MarketBlock(Material par1Material)
 	{
 		super(par1Material);
-		
-		setBlockUnbreakable();
+	
 	}
 	
 	@Override
@@ -32,52 +31,16 @@ public class MarketBlock extends SimObjectBlock
 	    {
 	    	MarketTileEntity teHome = (MarketTileEntity)par1World.getTileEntity(par2, par3, par4);
 	    	
-	    	if (teHome.isCompleted())
+	    	//if (teHome.isCompleted())
 	    	{
 	    		par5EntityPlayer.openGui(SimCraft.instance, 2, par1World, par2, par3, par4);
 	    	}
-	    	else
-	    		par5EntityPlayer.openGui(SimCraft.instance, 1, par1World, par2, par3, par4);
+	    	//else
+	    		//par5EntityPlayer.openGui(SimCraft.instance, 1, par1World, par2, par3, par4);
 	    	
 	        return true;
 	    }
 	}
-	
-	//You don't want the normal render type, or it wont render properly.
-    @Override
-    public int getRenderType() 
-    {
-            return -1;
-    }
-    
-    //It's not an opaque cube, so you need this.
-    @Override
-    public boolean isOpaqueCube() {
-            return false;
-    }
-   
-    //It's not a normal block, so you need this too.
-    public boolean renderAsNormalBlock() {
-            return false;
-    }
-	
-	@Override
-	public int quantityDropped(Random par1Random)
-    {
-        return 0;
-    }
-	
-	@Override
-	public boolean canDropFromExplosion(Explosion par1Explosion)
-	{
-		return false;
-	}
-	
-	public int getMobilityFlag()
-    {
-		return 2; //Do not allow to be moved by Pistons or such.
-    }
-
 	@Override
 	public TileEntity createNewTileEntity(World var1, int var2) {
 		return new MarketTileEntity();

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
+import mods.simcraft.SimCraft;
 import mods.simcraft.common.Home;
 import mods.simcraft.data.HomeManager;
 import mods.simcraft.data.MarketManager;
@@ -58,6 +59,7 @@ public class PacketMarketSellItems extends SimPacket {
 		if (te instanceof MarketTileEntity)
 		{
 			tile = (MarketTileEntity)te;
+			player.worldObj.playSoundEffect((double)((float)xCoord + 0.5F), (double)((float)yCoord + 0.5F), (double)((float)zCoord + 0.5F), SimCraft.MODID + ":coins1", 2.0f, 2.0f);
 			MarketManager.sellItems(player, tile);
 		}
 	}

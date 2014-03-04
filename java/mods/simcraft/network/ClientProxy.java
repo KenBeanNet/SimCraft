@@ -6,7 +6,8 @@ import java.io.File;
 
 import mods.simcraft.client.gui.BuildingGui;
 import mods.simcraft.client.gui.HomeGui;
-import mods.simcraft.client.gui.MarketGui;
+import mods.simcraft.client.gui.MarketBuyGui;
+import mods.simcraft.client.gui.MarketSellGui;
 import mods.simcraft.client.gui.OverlayGui;
 import mods.simcraft.common.Repository;
 import mods.simcraft.item.render.ItemHomeRenderer;
@@ -58,7 +59,9 @@ public class ClientProxy extends CommonProxy
 			case 1: 
 				return new BuildingGui((SimObjectTileEntity)world.getTileEntity(x, y, z), x, y, z);
 			case 2: 
-				return new MarketGui(player.inventory, (MarketTileEntity)world.getTileEntity(x, y, z), x, y, z);
+				return new MarketSellGui(player, (MarketTileEntity)world.getTileEntity(x, y, z), x, y, z);
+			case 3:
+				return new MarketBuyGui(player, (MarketTileEntity)world.getTileEntity(x, y, z), x, y, z);
 		}
 		return null;
 	}

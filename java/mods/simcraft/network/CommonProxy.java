@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import mods.simcraft.SimCraft;
+import mods.simcraft.client.gui.OverlayGui;
 import mods.simcraft.inventory.DefaultContainer;
 import mods.simcraft.inventory.MarketContainer;
 import mods.simcraft.player.ExtendedPlayer;
@@ -17,6 +18,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -50,6 +52,8 @@ public class CommonProxy implements IGuiHandler {
 				return new DefaultContainer();
 			case 2: 
 				return new MarketContainer(player.inventory, (MarketTileEntity)world.getTileEntity(x, y, z));
+			case 3: 
+				return new DefaultContainer();
 		}
 		return null;
 	}

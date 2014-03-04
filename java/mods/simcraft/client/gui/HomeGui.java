@@ -206,7 +206,12 @@ public class HomeGui extends SimGui
 			{
 				if (townName.length() < 4)
 				{
-					playerPar1.addChatMessage(new ChatComponentText("Your town must have more than 4 letters."));
+					playerPar1.addChatMessage(new ChatComponentText("[SimCraft] Your town must have more than 4 letters."));
+					return;
+				}
+				else if (homeType == 0)
+				{
+					playerPar1.addChatMessage(new ChatComponentText("[SimCraft] You must select a Home Type."));
 					return;
 				}
 				
