@@ -64,7 +64,7 @@ public class MarketContainer extends Container
                     stack = stackInSlot.copy();
 
                     //merges the item into player inventory since its in the tileEntity
-                    if (slot < 9) {
+                    if (slot < 6) {
                             if (!this.mergeItemStack(stackInSlot, 0, 35, true)) {
                                     return null;
                             }

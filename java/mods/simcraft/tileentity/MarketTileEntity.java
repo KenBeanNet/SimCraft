@@ -13,14 +13,14 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.Constants;
 
-public class MarketTileEntity extends TileEntity implements IInventory
+public class MarketTileEntity extends SimObjectTileEntity implements IInventory
 {
 	public static final int BUILD_TIME = 500;
 	
 	public ItemStack[] chestContents;
 	
 	public MarketTileEntity() {
-		//super(BUILD_TIME);
+		super(BUILD_TIME);
 		
 		this.chestContents = new ItemStack[getSizeInventory()];
 	}
@@ -70,7 +70,7 @@ public class MarketTileEntity extends TileEntity implements IInventory
 
 	@Override
 	public String getInventoryName() {
-		return "simcraft.markettileentity";
+		return "markettileentity";
 	}
 
 	@Override
@@ -103,7 +103,7 @@ public class MarketTileEntity extends TileEntity implements IInventory
 	@Override
 	public boolean isItemValidForSlot(int var1, ItemStack var2) {
 		// TODO Auto-generated method stub
-		return true;
+		return false;
 	}
 	
 	@Override

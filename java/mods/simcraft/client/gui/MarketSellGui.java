@@ -91,7 +91,7 @@ public class MarketSellGui extends GuiContainer
 		drawCenteredString(this.fontRendererObj, "MarketPlace!", this.width / 2, 10, 0x6699FF);
 		
 		drawString(this.fontRendererObj, "Market Stats", 10, 50, 0xFFCC00);
-		//drawString(this.fontRendererObj, "Level " + tile.getLevel(), 10, 60, 0x66CC66);
+		drawString(this.fontRendererObj, "Level " + tile.getLevel(), 10, 60, 0x66CC66);
 		drawString(this.fontRendererObj, "Tax 10%", 10, 70, 0x66CC66);
 		
 		if (totalPrice != 0)
