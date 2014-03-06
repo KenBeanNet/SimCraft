@@ -76,7 +76,7 @@ public class PacketMarketItemPriceCheck extends SimPacket {
 	@Override
 	public void handleServerSide(EntityPlayer player) 
 	{
-		int totalPrice = MarketManager.getPriceCheck(items);
+		//int totalPrice = MarketManager.getPriceCheck(items);
 		TileEntity te = player.worldObj.getTileEntity(xCoord, yCoord, zCoord);
 		if (te instanceof MarketTileEntity)
 		{

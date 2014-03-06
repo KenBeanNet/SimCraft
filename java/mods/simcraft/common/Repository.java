@@ -18,4 +18,9 @@ public class Repository
     
     //Flowers
     public static Block[] blockFlowers;
+    
+    //Roofs
+    public static Block[] blockRoofCorners;
+    public static Block[] blockRoofIntCorners;
+    public static Block[] blockRoofSlopes;
 }

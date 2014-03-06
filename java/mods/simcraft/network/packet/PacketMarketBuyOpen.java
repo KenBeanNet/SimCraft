@@ -8,6 +8,7 @@ import mods.simcraft.SimCraft;
 import mods.simcraft.common.Home;
 import mods.simcraft.data.HomeManager;
 import mods.simcraft.data.MarketManager;
+import mods.simcraft.data.MarketManager.MarketItem;
 import mods.simcraft.network.SimPacket;
 import mods.simcraft.tileentity.HomeTileEntity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -48,8 +49,9 @@ public class PacketMarketBuyOpen extends SimPacket
 	@Override
 	public void handleServerSide(EntityPlayer player) 
 	{
-		ItemStack[] items = MarketManager.getItems(pageNumber); 
-		SimCraft.packetPipeline.sendTo(new PacketMarketBuyList(items), (EntityPlayerMP)player);
+		MarketItem[] items = MarketManager.getItems(pageNumber); 
+		int maxPageCount = MarketManager.getItemsPageCount();
+		SimCraft.packetPipeline.sendTo(new PacketMarketBuyList(items, maxPageCount), (EntityPlayerMP)player);
 	}
 
 }

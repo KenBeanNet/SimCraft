@@ -4,6 +4,7 @@ import java.util.List;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import mods.simcraft.data.MarketManager;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBush;
 import net.minecraft.block.BlockFlower;
@@ -39,7 +40,7 @@ public class FlowerBlock extends BlockFlower implements IPlantable
 		iconArray = new IIcon[16];
 		for (int i = 0; i < 16; i++)
 		{
-			iconArray[i] = par1IconRegister.registerIcon("simcraft:flowers/" + this.getUnlocalizedName().replace("tile.", "") + i);
+			iconArray[i] = par1IconRegister.registerIcon("simcraft:flowers/" + this.getTextureName() + i);
 		}
     }
 	

@@ -47,6 +47,7 @@ public class SimCraft
     public static CreativeTab tabFences;
     public static CreativeTab tabCarpets;
     public static CreativeTab tabFlowers;
+    public static CreativeTab tabRoofs;
     
     public static Content content;
     
@@ -62,6 +63,7 @@ public class SimCraft
     	tabFences = new CreativeTab("SimFences");
     	tabCarpets = new CreativeTab("SimCarpets");
     	tabFlowers = new CreativeTab("SimFlowers");
+    	tabRoofs = new CreativeTab("SimRoofs");
     	
     	content = new Content();
     	
@@ -81,6 +83,7 @@ public class SimCraft
     	tabFences.init(new ItemStack(Blocks.fence, 1));
     	tabCarpets.init(new ItemStack(Blocks.carpet, 1));
     	tabFlowers.init(new ItemStack(Blocks.waterlily, 1));
+    	tabRoofs.init(new ItemStack(Repository.blockRoofSlopes[0], 1));
     }
     
     @EventHandler
@@ -101,7 +104,6 @@ public class SimCraft
     public void serverStart(FMLServerStartingEvent event)
     {
     	HomeManager.loadAllHomes();
-    	MarketManager.loadMarketDefaultPrices();
     	MarketManager.loadMarketPlace();
     }
 }

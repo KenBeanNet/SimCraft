@@ -101,7 +101,6 @@ public class MarketSellGui extends GuiContainer
 			drawString(this.fontRendererObj, "Tax              " + totalTax, this.width - 124, 130, 0x66CC66);
 			drawString(this.fontRendererObj, "Payout          " + totalProfit, this.width - 124, 140, 0x66CC66);
 		}
-		
     }
 
 	@Override

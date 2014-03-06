@@ -36,19 +36,17 @@ public class MarketTileEntity extends SimObjectTileEntity implements IInventory
 	}
 
 	@Override
-	public ItemStack decrStackSize(int slot, int amt) {
+	public ItemStack decrStackSize(int slot, int amount) {
 		ItemStack stack = getStackInSlot(slot);
-        if (stack != null) {
-                if (stack.stackSize <= amt) {
-                        setInventorySlotContents(slot, null);
-                } else {
-                        stack = stack.splitStack(amt);
-                        if (stack.stackSize == 0) {
-                                setInventorySlotContents(slot, null);
-                        }
-                }
-        }
-        return stack;
+		if (stack != null) {
+			if(stack.stackSize > amount) {
+				stack = stack.splitStack(amount);
+				markDirty();
+			} else {
+				setInventorySlotContents(slot, null);
+			}
+		}
+		return stack;
 	}
 
 	@Override
@@ -61,11 +59,13 @@ public class MarketTileEntity extends SimObjectTileEntity implements IInventory
 	}
 
 	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack) {
-		chestContents[slot] = stack;
-        if (stack != null && stack.stackSize > getInventoryStackLimit()) {
-                stack.stackSize = getInventoryStackLimit();
-        }
+	public void setInventorySlotContents(int slot, ItemStack itemstack) 
+	{
+		chestContents[slot] = itemstack;
+		if (itemstack != null && itemstack.stackSize > getInventoryStackLimit()) {
+			itemstack.stackSize = getInventoryStackLimit();
+		}
+		markDirty();
 	}
 
 	@Override

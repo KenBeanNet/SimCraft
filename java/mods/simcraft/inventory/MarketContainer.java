@@ -27,31 +27,29 @@ public class MarketContainer extends Container
     	return tile.isUseableByPlayer(player);
     }
     
-    protected void bindPlayerInventory(IInventory playerInventory, IInventory chestInventory) {
-
-    	for (int chestRow = 0; chestRow < 2; chestRow++)
+    protected void bindPlayerInventory(IInventory playerInventory, IInventory chestInventory)
+    {
+    	for (int j = 0; j < 2; ++j)
         {
-            for (int chestCol = 0; chestCol < 3; chestCol++)
+            for (int k = 0; k < 3; ++k)
             {
-                addSlotToContainer(new Slot(chestInventory, chestCol + chestRow * 2, 12 + chestCol * 18, 8 + chestRow * 18));
+                this.addSlotToContainer(new Slot(chestInventory, k + j * 3, 8 + k * 18, 18 + j * 18));
             }
         }
     	
-    	// Player inventory
-        int rows = 3;
-        int cols = 9;
-        for (int y = 0; y < rows; y++) {
-            for (int x = 0; x < cols; x++) {
-                // Slot params: id, x-coord, y-coord (coords are relative to gui box)
-                addSlotToContainer(new Slot(playerInventory, x + (y + 1) * cols, 133 + x * 18, 122 + y * 18));
+    	for (int j = 0; j < 3; ++j)
+        {
+            for (int k = 0; k < 9; ++k)
+            {
+                this.addSlotToContainer(new Slot(playerInventory, k + j * 9 + 9, 133 + k * 18, 122 + j * 18));
             }
         }
-        
-        // Player hotbar
-        for (int x = 0; x < cols; x++) {
-            addSlotToContainer(new Slot(playerInventory, x, 133 + x * 18, 179));
+
+        for (int j = 0; j < 9; ++j)
+        {
+            this.addSlotToContainer(new Slot(playerInventory, j, 133 + j * 18, 180));
         }
-}
+    }
 
     @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int slot) {

@@ -9,6 +9,7 @@ import mods.simcraft.client.gui.MarketBuyGui;
 import mods.simcraft.common.Home;
 import mods.simcraft.data.HomeManager;
 import mods.simcraft.data.MarketManager;
+import mods.simcraft.data.MarketManager.MarketItem;
 import mods.simcraft.network.SimPacket;
 import mods.simcraft.tileentity.HomeTileEntity;
 import net.minecraft.block.Block;
@@ -20,15 +21,17 @@ import net.minecraft.world.World;
 
 public class PacketMarketBuyList extends SimPacket 
 {
-	private ItemStack[] items;
+	private MarketItem[] items;
+	private int maxPageCount;
 	
 	public PacketMarketBuyList()
 	{
 		
 	}
-	public PacketMarketBuyList(ItemStack[] par1Items) 
+	public PacketMarketBuyList(MarketItem[] par1Items, int par2MaxPageCount) 
 	{
 		items = par1Items;
+		maxPageCount = par2MaxPageCount;
 	}
 
 	@Override
@@ -43,18 +46,22 @@ public class PacketMarketBuyList extends SimPacket
 		buffer.writeInt(amount);
 		for (int i = 0; i < amount; i++)
 		{
-			ByteBufUtils.writeUTF8String(buffer, items[i].getItem().getUnlocalizedName());
-			buffer.writeInt(items[i].stackSize);
+			ByteBufUtils.writeUTF8String(buffer, items[i].item);
+			buffer.writeInt(items[i].count);
+			buffer.writeShort(items[i].metadata);
 		}
+		buffer.writeInt(maxPageCount);
 	}
 
 	@Override
 	public void decodeInto(ChannelHandlerContext ctx, ByteBuf buffer) {
 		int amount = buffer.readInt();
+		items = new MarketItem[amount];
 		for (int i = 0; i < amount; i++)
 		{
-			items[i] = new ItemStack(Block.getBlockFromName(ByteBufUtils.readUTF8String(buffer)), buffer.readInt());
+			items[i] = new MarketItem(ByteBufUtils.readUTF8String(buffer), buffer.readInt(), buffer.readShort());
 		}
+		maxPageCount = buffer.readInt();
 	}
 
 	@Override
@@ -63,6 +70,7 @@ public class PacketMarketBuyList extends SimPacket
 		{
 			MarketBuyGui gui = (MarketBuyGui)Minecraft.getMinecraft().currentScreen;
 			gui.items = items;
+			gui.maxPageNumber = maxPageCount;
 		}
 	}
 
