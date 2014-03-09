@@ -23,4 +23,10 @@ public class Repository
     public static Block[] blockRoofCorners;
     public static Block[] blockRoofIntCorners;
     public static Block[] blockRoofSlopes;
+    
+    
+    //RenderIds
+    public static int SlopesRenderID;
+    public static int IntCornersRenderID;
+    public static int CornersRenderID;
 }

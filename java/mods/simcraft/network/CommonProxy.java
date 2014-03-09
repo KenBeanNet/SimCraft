@@ -7,7 +7,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import mods.simcraft.SimCraft;
+import mods.simcraft.blocks.roofs.render.CornersRenderer;
 import mods.simcraft.client.gui.OverlayGui;
+import mods.simcraft.common.Repository;
 import mods.simcraft.inventory.DefaultContainer;
 import mods.simcraft.inventory.MarketContainer;
 import mods.simcraft.player.ExtendedPlayer;
@@ -18,6 +20,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.registry.EntityRegistry;

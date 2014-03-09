@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 
+import mods.simcraft.blocks.roofs.render.CornersRenderer;
 import mods.simcraft.client.gui.BuildingGui;
 import mods.simcraft.client.gui.HomeCenterGui;
 import mods.simcraft.client.gui.HomeGui;
@@ -43,6 +44,15 @@ public class ClientProxy extends CommonProxy
         
         
         ClientRegistry.bindTileEntitySpecialRenderer(HomeTileEntity.class, new ModelHome());
+        
+
+		
+		Repository.SlopesRenderID = RenderingRegistry.getNextAvailableRenderId();
+        //RenderingRegistry.registerBlockHandler(Repository.SlopesRenderID, new RenderSlopes());
+        Repository.IntCornersRenderID = RenderingRegistry.getNextAvailableRenderId();
+        //RenderingRegistry.registerBlockHandler(Repository.IntCornersRenderID, new RenderIntCorners());
+        Repository.CornersRenderID = RenderingRegistry.getNextAvailableRenderId();
+        RenderingRegistry.registerBlockHandler(Repository.CornersRenderID, new CornersRenderer());
     }
 	
 	public File getMinecraftDir()

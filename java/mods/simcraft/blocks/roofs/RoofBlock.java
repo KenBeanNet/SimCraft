@@ -2,6 +2,7 @@ package mods.simcraft.blocks.roofs;
 
 import java.util.List;
 
+import mods.simcraft.common.Repository;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -23,11 +24,13 @@ public class RoofBlock extends Block
 	protected RoofBlock(Material material)
 	{
 		super(material);
-		this.setHardness(5.0F);
-		this.setResistance(2.0F);
+		this.setHardness(2.0F);
+		this.setResistance(5.0F);
+		this.setTickRandomly(true);
 	}
 	
 	@SideOnly(Side.CLIENT)
+	@Override
     public void getSubBlocks(Item p_149666_1_, CreativeTabs p_149666_2_, List p_149666_3_)
     {
 		p_149666_3_.add(new ItemStack(p_149666_1_, 1, 0));
@@ -37,8 +40,18 @@ public class RoofBlock extends Block
     }
 	
 	/**
+     * The type of render function that is called for this block
+     */
+	@Override
+    public int getRenderType()
+    {
+        return Repository.CornersRenderID;
+    }
+    
+	/**
      * If this block doesn't render as an ordinary block it will return False (examples: signs, buttons, stairs, etc)
      */
+	@Override
     public boolean renderAsNormalBlock()
     {
         return false;
@@ -48,6 +61,7 @@ public class RoofBlock extends Block
      * Is this block (a) opaque and (b) a full 1m cube?  This determines whether or not to render the shared face of two
      * adjacent blocks and also whether the player can attach torches, redstone wire, etc to this block.
      */
+	@Override
     public boolean isOpaqueCube()
     {
         return false;
@@ -79,6 +93,7 @@ public class RoofBlock extends Block
     /**
      * Called when the block is placed in the world.
      */
+    @Override
     public void onBlockPlacedBy(World par1World, int par2X, int par3Y, int par4Z, EntityLivingBase p_149689_5_, ItemStack p_149689_6_) 
     {
     	int l = MathHelper.floor_double(p_149689_5_.rotationYaw * 4.0F / 360.0F + 0.5D) & 0x3;
@@ -125,6 +140,6 @@ public class RoofBlock extends Block
     @SideOnly(Side.CLIENT)
     public void registerBlockIcons(IIconRegister par1IconRegister)
     {
-    	blockIcon = par1IconRegister.registerIcon("simcraft:" + this.getUnlocalizedName().replace("tile.", ""));
+    	blockIcon = par1IconRegister.registerIcon("simcraft:roofs/" + this.getTextureName());
     }
 }
