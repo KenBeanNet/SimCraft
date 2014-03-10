@@ -3,7 +3,7 @@ package mods.simcraft.client.gui;
 import mods.simcraft.SimCraft;
 import mods.simcraft.data.HomeManager;
 import mods.simcraft.inventory.MarketContainer;
-import mods.simcraft.network.packet.PacketMarketItemPriceCheck;
+import mods.simcraft.network.packet.PacketMarketSellItemPriceCheck;
 import mods.simcraft.network.packet.PacketMarketSellItems;
 import mods.simcraft.tileentity.MarketTileEntity;
 import net.minecraft.client.Minecraft;
@@ -69,7 +69,7 @@ public class MarketSellGui extends GuiContainer
 	{
 		if (button.id == 1)
 		{
-			SimCraft.packetPipeline.sendToServer(new PacketMarketItemPriceCheck(tile));
+			SimCraft.packetPipeline.sendToServer(new PacketMarketSellItemPriceCheck(tile));
 		}
 		else if (button.id == 2)
 		{

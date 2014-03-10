@@ -27,7 +27,7 @@ public class MarketTileEntity extends SimObjectTileEntity implements IInventory
 
 	@Override
 	public int getSizeInventory() {
-		return 6;
+		return 9;
 	}
 
 	@Override

@@ -43,7 +43,7 @@ public class SimObjectTileEntity extends TileEntity
 	protected int buildTime;
 	protected int timeLeft;
 	protected int delay;
-	protected int level;
+	protected int level = 1;
 	private byte direction;
 	protected boolean sentBuildCommands = false;
 	

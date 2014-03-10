@@ -17,17 +17,17 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
-public class PacketMarketItemPriceCheckResult extends SimPacket {
+public class PacketMarketSellItemPriceCheckResult extends SimPacket {
 
 	private int totalPrice;
 	private int totalTax;
 	private int totalProfit;
 	
-	public PacketMarketItemPriceCheckResult() 
+	public PacketMarketSellItemPriceCheckResult() 
 	{
 	}
 
-	public PacketMarketItemPriceCheckResult(int par1Price, int par2Tax, int par3Profit) 
+	public PacketMarketSellItemPriceCheckResult(int par1Price, int par2Tax, int par3Profit) 
 	{
 		totalPrice = par1Price;
 		totalTax = par2Tax;

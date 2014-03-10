@@ -86,7 +86,18 @@ public class MarketManager
 			for (int j = 0; j < 16; j++)
 			{
 				String itemName = "simcraft:" + Repository.blockFlowers[i].getUnlocalizedName().replace("tile.", "");
-				itemList.put(itemName + j, new MarketItem(itemName, 1, j));
+				if (!itemList.containsKey(itemName + j))
+					itemList.put(itemName + j, new MarketItem(itemName, 1, j));
+			}
+		}
+		
+		for (int i = 0; i < Repository.blockBrick.length; i++)
+		{
+			for (int j = 0; j < 16; j++)
+			{
+				String itemName = "simcraft:" + Repository.blockBrick[i].getUnlocalizedName().replace("tile.", "");
+				if (!itemList.containsKey(itemName + j))
+					itemList.put(itemName + j, new MarketItem(itemName, 1, j));
 			}
 		}
 		
@@ -108,21 +119,21 @@ public class MarketManager
 	
 	public static int getTaxOnPrice(int marketLevel, int totalPrice)
 	{
-		int taxLevel = 0;
+		double taxLevel = 0.0;
 		switch (marketLevel)
 		{
 			case 1:
 			{
-				taxLevel = 50;
+				taxLevel = 0.50;
 				break;
 			}
 			case 2:
 			{
-				taxLevel = 40;
+				taxLevel = 0.40;
 				break;
 			}
 		}
-		return MathHelper.floor_double(totalPrice * (float)(taxLevel / .100));
+		return MathHelper.floor_double(totalPrice * taxLevel);
 	}
 	
 	public static boolean sellItems(EntityPlayer player, MarketTileEntity tile)
@@ -157,11 +168,13 @@ public class MarketManager
 			if (keysAsArray.size() > i + (pageNumber * 9))
 			{
 				MarketItem marketItem = itemList.get(keysAsArray.get(i + (pageNumber * 9)));
-				toReturn[i] = marketItem;
+				if (marketItem.item != null)
+					toReturn[i] = marketItem;
 			}
 		}
 		return toReturn;
 	}
+	
 	public static int getItemsPageCount() {
 		return itemList.size() / 9;
 	}

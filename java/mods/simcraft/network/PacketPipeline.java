@@ -14,10 +14,12 @@ import mods.simcraft.network.packet.PacketExtendedInfo;
 import mods.simcraft.network.packet.PacketHomeCenterList;
 import mods.simcraft.network.packet.PacketHomeCenterListResponse;
 import mods.simcraft.network.packet.PacketHomeInfo;
+import mods.simcraft.network.packet.PacketMarketBuyItemPriceCheck;
+import mods.simcraft.network.packet.PacketMarketBuyItemPriceCheckResult;
 import mods.simcraft.network.packet.PacketMarketBuyList;
 import mods.simcraft.network.packet.PacketMarketBuyOpen;
-import mods.simcraft.network.packet.PacketMarketItemPriceCheck;
-import mods.simcraft.network.packet.PacketMarketItemPriceCheckResult;
+import mods.simcraft.network.packet.PacketMarketSellItemPriceCheck;
+import mods.simcraft.network.packet.PacketMarketSellItemPriceCheckResult;
 import mods.simcraft.network.packet.PacketMarketSellItems;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -64,13 +66,15 @@ public class PacketPipeline extends MessageToMessageCodec<FMLProxyPacket, SimPac
 		registerPacket(PacketHomeInfo.class);
 		registerPacket(PacketCreateHome.class);
 		registerPacket(PacketExtendedInfo.class);
-		registerPacket(PacketMarketItemPriceCheck.class);
-		registerPacket(PacketMarketItemPriceCheckResult.class);
+		registerPacket(PacketMarketSellItemPriceCheck.class);
+		registerPacket(PacketMarketSellItemPriceCheckResult.class);
 		registerPacket(PacketMarketSellItems.class);
 		registerPacket(PacketMarketBuyOpen.class);
 		registerPacket(PacketMarketBuyList.class);
 		registerPacket(PacketHomeCenterList.class);
 		registerPacket(PacketHomeCenterListResponse.class);
+		registerPacket(PacketMarketBuyItemPriceCheck.class);
+		registerPacket(PacketMarketBuyItemPriceCheckResult.class);
 	}
 	
     /**

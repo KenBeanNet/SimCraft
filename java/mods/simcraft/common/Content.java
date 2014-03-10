@@ -43,15 +43,15 @@ public class Content
         GameRegistry.registerBlock(Repository.marketBlock, "block.market");
         Repository.homeCenterBlock = new HomeCenterBlock(Material.wood).setBlockName("HomeCenterBlock").setCreativeTab(SimCraft.tabBlocks);
         GameRegistry.registerBlock(Repository.homeCenterBlock, "block.homecenter");
-        Repository.brickBlock = new BrickBlock[TOTAL_BRICKS];
+        Repository.blockBrick = new BrickBlock[TOTAL_BRICKS];
     }
 	
 	void registerBricks()
 	{
         for (int i = 0; i < TOTAL_BRICKS; i++)
         {
-            Repository.brickBlock[i] = new BrickBlock(Material.rock).setBlockName("blockBricks" + i + "_").setCreativeTab(SimCraft.tabBricks);
-            GameRegistry.registerBlock(Repository.brickBlock[i], "block.blockBricks" + i + "_");
+            Repository.blockBrick[i] = new BrickBlock(Material.rock).setBlockName("blockBricks" + i + "_").setCreativeTab(SimCraft.tabBricks);
+            GameRegistry.registerBlock(Repository.blockBrick[i], "block.blockBricks" + i + "_");
         }
 	}
 	

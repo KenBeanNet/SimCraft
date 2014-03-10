@@ -20,18 +20,18 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
-public class PacketMarketItemPriceCheck extends SimPacket {
+public class PacketMarketSellItemPriceCheck extends SimPacket {
 
 	private HashMap<String, Integer> items = new HashMap<String, Integer>();
 	private MarketTileEntity tile;
 	private int xCoord;
 	private int yCoord;
 	private int zCoord;
-	public PacketMarketItemPriceCheck() 
+	public PacketMarketSellItemPriceCheck() 
 	{
 	}
 
-	public PacketMarketItemPriceCheck(MarketTileEntity par1Tile) 
+	public PacketMarketSellItemPriceCheck(MarketTileEntity par1Tile) 
 	{
 		tile = par1Tile;
 		for (ItemStack s : tile.chestContents)

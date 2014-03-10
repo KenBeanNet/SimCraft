@@ -7,8 +7,8 @@ import mods.simcraft.SimCraft;
 import mods.simcraft.common.GuiHelpers;
 import mods.simcraft.data.MarketManager.MarketItem;
 import mods.simcraft.inventory.MarketContainer;
+import mods.simcraft.network.packet.PacketMarketBuyItemPriceCheck;
 import mods.simcraft.network.packet.PacketMarketBuyOpen;
-import mods.simcraft.network.packet.PacketMarketItemPriceCheck;
 import mods.simcraft.network.packet.PacketMarketSellItems;
 import mods.simcraft.tileentity.MarketTileEntity;
 import net.minecraft.block.Block;
@@ -20,6 +20,7 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 
@@ -37,6 +38,13 @@ public class MarketBuyGui extends SimGui
 	private GuiTextField txtTownName;
 	private int pageNumber = 0;
 	public int maxPageNumber = 1;
+	
+	private GuiTextField txtPurchaseAmount;
+	private GuiButton btnPriceCheck;
+	private GuiButton btnPurchase;
+	private int totalCount = 0;
+	public int tax = 0;
+	public int price = 0;
 	
 	private GuiButton[] btnMoreInfo = new GuiButton[9];
 	
@@ -59,12 +67,24 @@ public class MarketBuyGui extends SimGui
 		txtTownName = new GuiTextField(this.fontRendererObj, 50 , this.height - 24, 100, 17);
 		txtTownName.setMaxStringLength(16);
 		
+		txtPurchaseAmount = new GuiTextField(this.fontRendererObj, this.width / 2, this.height / 3 + 30 , 100, 17);
+		txtPurchaseAmount.setMaxStringLength(16);
+		
 		for (int i = 0; i < btnMoreInfo.length; i++)
 		{
 			btnMoreInfo[i] = new GuiButton(20 + i, 100 * (i % 3) + 43, 60 * (i / 3) + 70, 35, 20, "Info");
+			btnMoreInfo[i].visible = false;
 			this.buttonList.add(btnMoreInfo[i]);
 		}
 			
+		btnPriceCheck = new GuiButton(5, this.width / 2, this.height / 3 + 60, 100, 20, "Price Check");
+		btnPriceCheck.visible = false;
+		this.buttonList.add(btnPriceCheck);
+		
+		btnPurchase = new GuiButton(6, this.width / 2, this.height / 3 + 120, 100, 20, "Purchase");
+		btnPurchase.visible = false;
+		this.buttonList.add(btnPurchase);
+		
 		this.buttonList.add(new GuiButton(4, this.width - 104, 35, 95, 20, "Sell Items"));
 
 		this.buttonList.add(new GuiButton(2, this.width - 70, this.height - 25, 35, 20, "Last"));
@@ -77,15 +97,17 @@ public class MarketBuyGui extends SimGui
 		
 		GL11.glColor4f(1F, 1F, 1F, 1F);
 		
+		drawCenteredString(this.fontRendererObj, "MarketPlace!", this.width / 2, 10, 0x6699FF);
+		
 		if (selectedItem == null)
 		{
-			txtTownName.drawTextBox();
-			
-			drawString(this.fontRendererObj, "Search: ", 5, this.height - 18, 0xFFCC00);
-			drawString(this.fontRendererObj, "Page " + (pageNumber + 1) + "/" + maxPageNumber, this.width - 125, this.height - 18, 0xFFCC00);
-			
 			if (items != null)
 			{
+				txtTownName.drawTextBox();
+				drawString(this.fontRendererObj, "Search: ", 5, this.height - 18, 0xFFCC00);
+				drawString(this.fontRendererObj, "Page " + (pageNumber) + "/" + maxPageNumber, this.width - 125, this.height - 18, 0xFFCC00);
+				
+				
 				for (int i = 0; i < items.length; i++)
 				{
 					if (items[i] == null)
@@ -95,7 +117,9 @@ public class MarketBuyGui extends SimGui
 			        
 			        if (itemStack == null)
 			        	continue;
-	
+			        
+			        btnMoreInfo[i].visible = true;
+			        
 					GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 			        RenderHelper.enableGUIStandardItemLighting();
 					itemRender.renderItemIntoGUI(fontRendererObj, mc.getTextureManager(), itemStack, 100 * (i % 3) + 50, 60 * (i / 3) + 40);
@@ -108,7 +132,31 @@ public class MarketBuyGui extends SimGui
 		}
 		else
 		{
+			ItemStack itemStack = new ItemStack(Block.getBlockFromName(selectedItem.item), 1, selectedItem.metadata);
+		
+			if (itemStack == null)
+			{
+				selectedItem = null;
+				return;
+			}
 			
+			drawCenteredString(this.fontRendererObj, StatCollector.translateToLocal(itemStack.getDisplayName()), width / 2, height / 4, 0xFFCC00);
+			
+			GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+	        RenderHelper.enableGUIStandardItemLighting();
+			itemRender.renderItemIntoGUI(fontRendererObj, mc.getTextureManager(), itemStack, width / 2 - 12, height / 3);
+	        RenderHelper.disableStandardItemLighting();
+	        GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+	        
+	        drawString(this.fontRendererObj, "Purchase Amount: ", this.width / 2 - 100, this.height / 3 + 35, 0xFFFFFF);
+	        txtPurchaseAmount.drawTextBox();
+	        
+	        if (price != 0 && tax != 0)
+	        {
+	        	drawString(this.fontRendererObj, "Purchase Price: " + price, this.width / 2 - 80, this.height / 3 + 80, 0xFFFFFF);
+	        	drawString(this.fontRendererObj, "Purchase Tax: " + tax, this.width / 2 - 80, this.height / 3 + 90, 0xFFFFFF);
+	        	drawString(this.fontRendererObj, "Purchase Total: " + getTotalPrice(), this.width / 2 - 80, this.height / 3 + 100, 0xFFFFFF);
+	        }
 		}
 		super.drawScreen(x, y, f);
 	}
@@ -139,23 +187,79 @@ public class MarketBuyGui extends SimGui
 		{
 			player.openGui(SimCraft.instance, 2, tile.getWorldObj(), xCoord, yCoord, zCoord);
 		}
+		else if (button.id == 5)
+		{
+			if (txtPurchaseAmount.getText().equals(""))
+				player.addChatMessage(new ChatComponentText("[SimCraft] You must type your purchase amount."));
+			
+			SimCraft.packetPipeline.sendToServer(new PacketMarketBuyItemPriceCheck(selectedItem, Integer.parseInt(txtPurchaseAmount.getText()), tile.getLevel()));
+		}
+		else if (button.id == 6)
+		{
+			player.addChatMessage(new ChatComponentText("[SimCraft] You have purchased "+ Integer.parseInt(txtPurchaseAmount.getText()) + " " + StatCollector.translateToLocal(selectedItem.item) + "(s) for " + getTotalPrice() + " simoleans." ));
+		}
 		else if (button.id >= 20 && button.id < 30)
 		{
+			if (items.length < button.id - 20)
+				return;
+			
 			selectedItem = items[button.id - 20];
+			
+			resetInfoButtons();
+			
+	        btnPriceCheck.visible = true;
 		}
 		if (oldPageNumber != pageNumber)
+		{
+			resetInfoButtons();
 			SimCraft.packetPipeline.sendToServer(new PacketMarketBuyOpen(pageNumber));
+		}
 	}
 	
 	public void keyTyped(char c, int i)
 	{
 		super.keyTyped(c, i);
 		txtTownName.textboxKeyTyped(c, i);
+		if (Character.isDigit(c) || c == '\b')
+			txtPurchaseAmount.textboxKeyTyped(c, i);
 	}
 	
 	public void mouseClicked(int i, int j, int k)
 	{
 		super.mouseClicked(i, j, k);
 		txtTownName.mouseClicked(i, j, k);
+		txtPurchaseAmount.mouseClicked(i, j, k);
+	}
+	
+	private void resetInfoButtons()
+	{	
+		items = null;
+		for (int i = 0; i < btnMoreInfo.length; i++)
+		{
+			btnMoreInfo[i].visible = false;
+		}
+	}
+	
+	public void setPurchaseOrder(int par1Price, int par2Tax)
+	{
+		price = par1Price;
+		tax = par2Tax;
+		
+		btnPriceCheck.visible = false;
+		btnPurchase.visible = true;
+	}
+	
+	private void resetPurchaseOrder()
+	{
+		price = 0;
+		tax = 0;
+		
+		btnPriceCheck.visible = true;
+		btnPurchase.visible = false;
+	}
+	
+	private int getTotalPrice()
+	{
+		return price + tax;
 	}
 }

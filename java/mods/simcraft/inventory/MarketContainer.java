@@ -29,7 +29,7 @@ public class MarketContainer extends Container
     
     protected void bindPlayerInventory(IInventory playerInventory, IInventory chestInventory)
     {
-    	for (int j = 0; j < 2; ++j)
+    	for (int j = 0; j < 3; ++j)
         {
             for (int k = 0; k < 3; ++k)
             {
