@@ -43,7 +43,7 @@ public class SimObjectTileEntity extends TileEntity
 	protected int buildTime;
 	protected int timeLeft;
 	protected int delay;
-	protected int level = 1;
+	protected short level = 1;
 	private byte direction;
 	protected boolean sentBuildCommands = false;
 	
@@ -113,7 +113,7 @@ public class SimObjectTileEntity extends TileEntity
 			//owner = nbt.getString(NBT_OWNER_NAME);
 		buildTime = nbt.getInteger(NBT_BUILD_TIME);
 		timeLeft = nbt.getInteger(NBT_TIME_LEFT);
-		level = nbt.getInteger(NBT_LEVEL);
+		level = nbt.getShort(NBT_LEVEL);
 		direction = nbt.getByte(NBT_DIRECTION);
 	}
 	
@@ -124,7 +124,7 @@ public class SimObjectTileEntity extends TileEntity
 			//nbt.setString(NBT_OWNER_NAME, owner);
 		nbt.setInteger(NBT_BUILD_TIME, buildTime);
 		nbt.setInteger(NBT_TIME_LEFT, timeLeft);
-		nbt.setInteger(NBT_LEVEL, level);
+		nbt.setShort(NBT_LEVEL, level);
 		nbt.setByte(NBT_DIRECTION, direction);
 	}
 	
@@ -139,7 +139,7 @@ public class SimObjectTileEntity extends TileEntity
 		owner = par1Owner;
 	}
 	
-	public int getLevel()
+	public short getLevel()
 	{
 		return level;
 	}

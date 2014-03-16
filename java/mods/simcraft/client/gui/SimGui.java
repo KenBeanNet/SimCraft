@@ -11,6 +11,8 @@ public class SimGui extends GuiScreen
 {
 
 	protected GuiButton btnHelp;
+	protected GuiButton btnNext;
+	protected GuiButton btnLast;
 	
 	@Override 
 	public void initGui()
@@ -18,6 +20,13 @@ public class SimGui extends GuiScreen
 		btnHelp = new GuiButton(9, 5, 5, 45, 20, "Help");
 		btnHelp.visible = false;
 		this.buttonList.add(btnHelp);
+		
+		btnLast = new GuiButton(2, this.width - 70, this.height - 25, 35, 20, "Last");
+		btnNext = new GuiButton(3, this.width - 35, this.height - 25, 35, 20, "Next");
+		btnLast.visible = false;
+		btnNext.visible = false;
+		this.buttonList.add(btnLast);
+		this.buttonList.add(btnNext);
 		
 		this.buttonList.add(new GuiButton(10, this.width - 50, 5, 45, 20, "Close"));
 	}

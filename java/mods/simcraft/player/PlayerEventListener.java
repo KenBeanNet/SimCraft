@@ -2,12 +2,15 @@ package mods.simcraft.player;
 
 import mods.simcraft.data.JobManager;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemPickaxe;
 import net.minecraft.item.ItemSpade;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
+import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -98,4 +101,60 @@ public class PlayerEventListener {
         	}
         }
     }
+    
+    @SubscribeEvent
+	public void ServerChat(ServerChatEvent event)
+	{
+    	String message = null;
+    	String line = event.message.toLowerCase();
+	
+    	if (line.startsWith(".addsimoleans"))
+    	{
+    		String[] split = line.split(" ");
+    		if (split.length == 3)
+    		{
+    			try 
+    			{
+    				EntityPlayerMP player = MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(split[1]);
+    				ExtendedPlayer extPlayer = ExtendedPlayer.getExtendedPlayer(player);
+    				if (extPlayer != null)
+    				{
+
+        				int amount = Integer.parseInt(split[2]);
+        				extPlayer.addSimoleans(amount);
+        				if (event.username.toLowerCase().equals(split[1]))
+        					event.player.addChatMessage(new ChatComponentText("[SimCraft] You have given yourself " + amount + " simoleans."));
+        				else
+        				{
+        					event.player.addChatMessage(new ChatComponentText("[SimCraft] You have given "+ split[1] + " " + amount + " simoleans."));
+        					player.addChatMessage(new ChatComponentText("[SimCraft] " + event.username + " has given you " + amount + " simoleans."));
+        				}
+        				event.setCanceled(true);
+    				}
+    				else
+    					message = "[SimCraft] Error Cannot Find Online Player : " + split[1];
+    			}
+    			finally
+    			{
+    				
+    			}
+    		}
+    		else
+    			message = "[SimCraft] Error : .addSimoleans <PLAYER> <AMOUNT> ";
+		}
+    	
+    	if (message != null)
+    	{
+    		event.player.addChatMessage(new ChatComponentText(message));
+    		event.setCanceled(true);
+    	}
+	}
+    
+	public boolean PlayerIsOP(String username)
+	{
+		if (MinecraftServer.getServer().getConfigurationManager().isPlayerOpped(username)) {
+			return true;
+		}
+			return false;
+	}
 }

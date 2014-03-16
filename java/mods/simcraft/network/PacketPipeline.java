@@ -14,6 +14,7 @@ import mods.simcraft.network.packet.PacketExtendedInfo;
 import mods.simcraft.network.packet.PacketHomeCenterList;
 import mods.simcraft.network.packet.PacketHomeCenterListResponse;
 import mods.simcraft.network.packet.PacketHomeInfo;
+import mods.simcraft.network.packet.PacketMarketBuyItem;
 import mods.simcraft.network.packet.PacketMarketBuyItemPriceCheck;
 import mods.simcraft.network.packet.PacketMarketBuyItemPriceCheckResult;
 import mods.simcraft.network.packet.PacketMarketBuyList;
@@ -75,6 +76,7 @@ public class PacketPipeline extends MessageToMessageCodec<FMLProxyPacket, SimPac
 		registerPacket(PacketHomeCenterListResponse.class);
 		registerPacket(PacketMarketBuyItemPriceCheck.class);
 		registerPacket(PacketMarketBuyItemPriceCheckResult.class);
+		registerPacket(PacketMarketBuyItem.class);
 	}
 	
     /**

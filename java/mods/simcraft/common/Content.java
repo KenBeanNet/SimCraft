@@ -51,7 +51,7 @@ public class Content
         for (int i = 0; i < TOTAL_BRICKS; i++)
         {
             Repository.blockBrick[i] = new BrickBlock(Material.rock).setBlockName("blockBricks" + i + "_").setCreativeTab(SimCraft.tabBricks);
-            GameRegistry.registerBlock(Repository.blockBrick[i], "block.blockBricks" + i + "_");
+            GameRegistry.registerBlock(Repository.blockBrick[i],  SimBlockMeta.class, "blockBricks" + i + "_");
         }
 	}
 	
@@ -61,7 +61,7 @@ public class Content
         for (int i = 0; i < TOTAL_BRICKS; i++)
         {
             Repository.blockFences[i] = new FenceBlock("stone", Material.rock).setBlockName("blockFences" + i + "_").setBlockTextureName("blockBricks" + i + "_").setCreativeTab(SimCraft.tabFences);
-            GameRegistry.registerBlock(Repository.blockFences[i], FenceBlockMeta.class, "blockFences" + i + "_");
+            GameRegistry.registerBlock(Repository.blockFences[i],  SimBlockMeta.class, "blockFences" + i + "_");
         }
 	}
 	
@@ -71,7 +71,7 @@ public class Content
         for (int i = 0; i < TOTAL_CARPETS; i++)
         {
             Repository.blockCarpets[i] = new CarpetBlock().setBlockName("blockCarpets" + i + "_").setCreativeTab(SimCraft.tabCarpets);
-            GameRegistry.registerBlock(Repository.blockCarpets[i], "block.blockCarpets" + i + "_");
+            GameRegistry.registerBlock(Repository.blockCarpets[i],  SimBlockMeta.class, "blockCarpets" + i + "_");
         }
 	}
 	
@@ -81,7 +81,7 @@ public class Content
         for (int i = 0; i < TOTAL_FLOWERS; i++)
         {
             Repository.blockFlowers[i] = new FlowerBlock(i).setBlockName("blockFlowers" + i + "_").setBlockTextureName("blockFlowers" + i + "_").setCreativeTab(SimCraft.tabFlowers);
-            GameRegistry.registerBlock(Repository.blockFlowers[i], FlowerBlockMeta.class, "blockFlowers" + i + "_");
+            GameRegistry.registerBlock(Repository.blockFlowers[i], SimBlockMeta.class, "blockFlowers" + i + "_");
         }
 	}
 	

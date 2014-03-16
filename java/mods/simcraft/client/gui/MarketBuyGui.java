@@ -7,6 +7,7 @@ import mods.simcraft.SimCraft;
 import mods.simcraft.common.GuiHelpers;
 import mods.simcraft.data.MarketManager.MarketItem;
 import mods.simcraft.inventory.MarketContainer;
+import mods.simcraft.network.packet.PacketMarketBuyItem;
 import mods.simcraft.network.packet.PacketMarketBuyItemPriceCheck;
 import mods.simcraft.network.packet.PacketMarketBuyOpen;
 import mods.simcraft.network.packet.PacketMarketSellItems;
@@ -42,9 +43,12 @@ public class MarketBuyGui extends SimGui
 	private GuiTextField txtPurchaseAmount;
 	private GuiButton btnPriceCheck;
 	private GuiButton btnPurchase;
+	private GuiButton btnSellItems;
 	private int totalCount = 0;
 	public int tax = 0;
 	public int price = 0;
+	
+	private GuiButton btnBack;
 	
 	private GuiButton[] btnMoreInfo = new GuiButton[9];
 	
@@ -67,7 +71,7 @@ public class MarketBuyGui extends SimGui
 		txtTownName = new GuiTextField(this.fontRendererObj, 50 , this.height - 24, 100, 17);
 		txtTownName.setMaxStringLength(16);
 		
-		txtPurchaseAmount = new GuiTextField(this.fontRendererObj, this.width / 2, this.height / 3 + 30 , 100, 17);
+		txtPurchaseAmount = new GuiTextField(this.fontRendererObj, this.width / 2 - 5, this.height / 3 + 30 , 100, 17);
 		txtPurchaseAmount.setMaxStringLength(16);
 		
 		for (int i = 0; i < btnMoreInfo.length; i++)
@@ -77,7 +81,7 @@ public class MarketBuyGui extends SimGui
 			this.buttonList.add(btnMoreInfo[i]);
 		}
 			
-		btnPriceCheck = new GuiButton(5, this.width / 2, this.height / 3 + 60, 100, 20, "Price Check");
+		btnPriceCheck = new GuiButton(5, this.width / 2 - 5, this.height / 3 + 60, 100, 20, "Price Check");
 		btnPriceCheck.visible = false;
 		this.buttonList.add(btnPriceCheck);
 		
@@ -85,10 +89,15 @@ public class MarketBuyGui extends SimGui
 		btnPurchase.visible = false;
 		this.buttonList.add(btnPurchase);
 		
-		this.buttonList.add(new GuiButton(4, this.width - 104, 35, 95, 20, "Sell Items"));
+		btnBack = new GuiButton(7, 5, 5, 45, 20, "Back");
+		btnBack.visible = false;
+		this.buttonList.add(btnBack);
+		
+		btnSellItems = new GuiButton(4, this.width - 104, 35, 95, 20, "Sell Items");
+		this.buttonList.add(btnSellItems);
 
-		this.buttonList.add(new GuiButton(2, this.width - 70, this.height - 25, 35, 20, "Last"));
-		this.buttonList.add(new GuiButton(3, this.width - 35, this.height - 25, 35, 20, "Next"));
+		btnNext.visible = true;
+		btnLast.visible = true;
 	}
 	
 	public void drawScreen(int x, int y, float f) 
@@ -132,6 +141,7 @@ public class MarketBuyGui extends SimGui
 		}
 		else
 		{
+			
 			ItemStack itemStack = new ItemStack(Block.getBlockFromName(selectedItem.item), 1, selectedItem.metadata);
 		
 			if (itemStack == null)
@@ -189,14 +199,25 @@ public class MarketBuyGui extends SimGui
 		}
 		else if (button.id == 5)
 		{
-			if (txtPurchaseAmount.getText().equals(""))
+			if (txtPurchaseAmount.getText().isEmpty()){
 				player.addChatMessage(new ChatComponentText("[SimCraft] You must type your purchase amount."));
+				return;
+			}
 			
 			SimCraft.packetPipeline.sendToServer(new PacketMarketBuyItemPriceCheck(selectedItem, Integer.parseInt(txtPurchaseAmount.getText()), tile.getLevel()));
 		}
 		else if (button.id == 6)
 		{
-			player.addChatMessage(new ChatComponentText("[SimCraft] You have purchased "+ Integer.parseInt(txtPurchaseAmount.getText()) + " " + StatCollector.translateToLocal(selectedItem.item) + "(s) for " + getTotalPrice() + " simoleans." ));
+			SimCraft.packetPipeline.sendToServer(new PacketMarketBuyItem(selectedItem, Integer.parseInt(txtPurchaseAmount.getText()), tile.getLevel()));
+		}
+		else if (button.id == 7)
+		{
+			selectedItem = null;
+			resetInfoButtons(true);
+			resetPurchaseOrder();
+
+			btnPurchase.visible = false;
+	        btnPriceCheck.visible = false;
 		}
 		else if (button.id >= 20 && button.id < 30)
 		{
@@ -205,13 +226,13 @@ public class MarketBuyGui extends SimGui
 			
 			selectedItem = items[button.id - 20];
 			
-			resetInfoButtons();
+			resetInfoButtons(false);
 			
-	        btnPriceCheck.visible = true;
+			btnPriceCheck.visible = true;
 		}
 		if (oldPageNumber != pageNumber)
 		{
-			resetInfoButtons();
+			resetInfoButtons(true);
 			SimCraft.packetPipeline.sendToServer(new PacketMarketBuyOpen(pageNumber));
 		}
 	}
@@ -231,13 +252,17 @@ public class MarketBuyGui extends SimGui
 		txtPurchaseAmount.mouseClicked(i, j, k);
 	}
 	
-	private void resetInfoButtons()
+	private void resetInfoButtons(boolean turnOn)
 	{	
-		items = null;
 		for (int i = 0; i < btnMoreInfo.length; i++)
 		{
-			btnMoreInfo[i].visible = false;
+			btnMoreInfo[i].visible = turnOn;
 		}
+
+		btnNext.visible = turnOn;
+		btnLast.visible = turnOn;
+		btnBack.visible = !turnOn; //Opposite
+        btnSellItems.visible = turnOn;
 	}
 	
 	public void setPurchaseOrder(int par1Price, int par2Tax)

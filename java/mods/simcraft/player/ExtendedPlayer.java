@@ -114,6 +114,12 @@ public class ExtendedPlayer implements IExtendedEntityProperties
 		markDirty();
 	}
 	
+	public void removeSimoleans(int value)
+	{
+		simoleans -= value;
+		markDirty();
+	}
+	
 	public void setExcavator(int value)
 	{
 		excavator = value;
