@@ -88,7 +88,8 @@ public class MarketSellGui extends GuiContainer
 	@Override
     protected void drawGuiContainerForegroundLayer (int par1, int par2)
     {
-		drawCenteredString(this.fontRendererObj, "MarketPlace!", this.width / 2, 10, 0x6699FF);
+		
+		drawCenteredString(this.fontRendererObj, "MarketPlace!", this.width / 2, 10, 0xFFFFFF);
 		
 		drawString(this.fontRendererObj, "Market Stats", 10, 50, 0xFFCC00);
 		drawString(this.fontRendererObj, "Level " + tile.getLevel(), 10, 60, 0x66CC66);
@@ -106,12 +107,15 @@ public class MarketSellGui extends GuiContainer
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3) 
 	{
+		this.drawGradientRect(0, 0, this.width, this.height, 0xA087CEFA, 0xA087CEFA);
+		
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		
 		this.mc.getTextureManager().bindTexture(GuiResourceFile.guiMarket);
 		
 		int totalX = (width - xSize) / 2;
         int totalY = (height - ySize) / 2;
+        
         drawTexturedModalRect(totalX, totalY, 0, 0, xSize, ySize);
 	}
 }

@@ -37,7 +37,7 @@ public class MarketBuyGui extends SimGui
 	private MarketTileEntity tile;
 	
 	private GuiTextField txtTownName;
-	private int pageNumber = 0;
+	private int pageNumber = 1;
 	public int maxPageNumber = 1;
 	
 	private GuiTextField txtPurchaseAmount;
@@ -102,11 +102,11 @@ public class MarketBuyGui extends SimGui
 	
 	public void drawScreen(int x, int y, float f) 
 	{
-		drawDefaultBackground();
+		this.drawGradientRect(0, 0, this.width, this.height, 0xA087CEFA, 0xA087CEFA);
 		
 		GL11.glColor4f(1F, 1F, 1F, 1F);
 		
-		drawCenteredString(this.fontRendererObj, "MarketPlace!", this.width / 2, 10, 0x6699FF);
+		drawCenteredString(this.fontRendererObj, "MarketPlace!", this.width / 2, 10, 0xFFFFFF);
 		
 		if (selectedItem == null)
 		{
@@ -184,8 +184,8 @@ public class MarketBuyGui extends SimGui
 		if (button.id == 2)
 		{
 			pageNumber--;
-			if (pageNumber < 0)
-				pageNumber = 0;
+			if (pageNumber <= 1)
+				pageNumber = 1;
 		}
 		else if (button.id == 3)
 		{
@@ -278,6 +278,7 @@ public class MarketBuyGui extends SimGui
 	{
 		price = 0;
 		tax = 0;
+		totalCount = 0;
 		
 		btnPriceCheck.visible = true;
 		btnPurchase.visible = false;

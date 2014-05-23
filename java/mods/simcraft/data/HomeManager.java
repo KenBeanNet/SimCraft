@@ -152,14 +152,19 @@ public class HomeManager {
 		return homeList.containsKey(username);
 	}
 	
-	public static List<Home> getHomesStartWith(String par1StartsWith)
+	public static List<Home> getHomesStartWith(String par1StartsWith, int pageNumber)
 	{
+		int startStoring = (pageNumber - 1) * 9; //This is for the sorting with page.  We will start sorting after this amount of finds;
+		int control = 0;
 		List<Home> toReturn = Lists.newArrayList();
 		for (Home h : homeList.values())
 		{
-			if (h.ownerUsername.startsWith(par1StartsWith) || h.name.startsWith(par1StartsWith))
+			if (h.ownerUsername.toLowerCase().startsWith(par1StartsWith.toLowerCase()) || h.name.toLowerCase().startsWith(par1StartsWith.toLowerCase()))
 			{
-				toReturn.add(h);
+				if (startStoring > control)
+					control++;
+				else
+					toReturn.add(h);
 			}
 			
 			if (toReturn.size() >= 9)
@@ -167,6 +172,20 @@ public class HomeManager {
 		}
 		
 		return toReturn;
+	}
+	
+	public static int getHomesPageCountStartWith(String par1StartsWith)
+	{
+		int toReturn = 0;
+		for (Home h : homeList.values())
+		{
+			if (h.ownerUsername.toLowerCase().startsWith(par1StartsWith.toLowerCase()) || h.name.toLowerCase().startsWith(par1StartsWith.toLowerCase()))
+			{
+				toReturn++;
+			}
+		}
+		
+		return MathHelper.ceiling_double_int(toReturn / 9.0);
 	}
 	
 	public static String getHomeTypeFromInt(int value)

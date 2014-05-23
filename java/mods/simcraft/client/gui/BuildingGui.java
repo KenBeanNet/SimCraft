@@ -34,7 +34,7 @@ public class BuildingGui extends GuiScreen {
 	
 	@Override
 	public void drawScreen(int x, int y, float f) {
-		drawDefaultBackground();
+		this.drawGradientRect(0, 0, this.width, this.height, 0xA087CEFA, 0xA087CEFA);
 		
 		GL11.glColor4f(1F, 1F, 1F, 1F);
 

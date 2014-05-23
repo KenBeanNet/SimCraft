@@ -20,25 +20,29 @@ import net.minecraft.world.World;
 public class PacketHomeCenterList extends SimPacket {
 
 	private String startsWith;
+	private int pageNumber;
 	
 	public PacketHomeCenterList() 
 	{
 	}
 
-	public PacketHomeCenterList(String par1StartsWith) 
+	public PacketHomeCenterList(String par1StartsWith, int par1PageNumber) 
 	{
 		startsWith = par1StartsWith;
+		pageNumber = par1PageNumber;
 	}
 
 	@Override
 	public void encodeInto(ChannelHandlerContext ctx, ByteBuf buffer) 
 	{
 		ByteBufUtils.writeUTF8String(buffer, startsWith);
+		buffer.writeInt(pageNumber);
 	}
 
 	@Override
 	public void decodeInto(ChannelHandlerContext ctx, ByteBuf buffer) {
 		startsWith = ByteBufUtils.readUTF8String(buffer);
+		pageNumber = buffer.readInt();
 	}
 
 	@Override
@@ -48,8 +52,9 @@ public class PacketHomeCenterList extends SimPacket {
 	@Override
 	public void handleServerSide(EntityPlayer player) 
 	{
-		List<Home> homeList = HomeManager.getHomesStartWith(startsWith);
-		SimCraft.packetPipeline.sendTo(new PacketHomeCenterListResponse(homeList), (EntityPlayerMP)player);
+		List<Home> homeList = HomeManager.getHomesStartWith(startsWith, pageNumber);
+		int homeCenterPageCount = HomeManager.getHomesPageCountStartWith(startsWith);
+		SimCraft.packetPipeline.sendTo(new PacketHomeCenterListResponse(homeList, homeCenterPageCount), (EntityPlayerMP)player);
 	}
 
 }

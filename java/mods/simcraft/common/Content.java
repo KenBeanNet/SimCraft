@@ -24,7 +24,7 @@ public class Content
 	public static final int TOTAL_BRICKS = 8;
 	public static final int TOTAL_CARPETS = 2;
 	public static final int TOTAL_FLOWERS = 3;
-	public static final int TOTAL_ROOFS = 2;
+	public static final int TOTAL_ROOFS = 4;
 	public Content()
 	{
 		registerBlocks();
@@ -93,9 +93,9 @@ public class Content
 		
         for (int i = 0; i < TOTAL_ROOFS; i++)
         {
-            Repository.blockRoofCorners[i] = new RoofCornerBlock(Material.rock).setBlockName("blockRoofCorner" + i).setBlockTextureName("blockRooftop_" + i).setCreativeTab(SimCraft.tabRoofs);
-            Repository.blockRoofIntCorners[i] = new RoofIntCornerBlock(Material.rock).setBlockName("blockRoofIntCorner" + i).setBlockTextureName("blockRooftop_" + i).setCreativeTab(SimCraft.tabRoofs);
-            Repository.blockRoofSlopes[i] = new RoofSlopeBlock(Material.rock).setBlockName("blockRoofSlope" + i).setBlockTextureName("blockRooftop_" + i).setCreativeTab(SimCraft.tabRoofs);
+            Repository.blockRoofCorners[i] = new RoofCornerBlock(Material.rock).setBlockName("blockRoofCorner" + i + "_").setBlockTextureName("blockRooftop_" + i).setCreativeTab(SimCraft.tabRoofs);
+            Repository.blockRoofIntCorners[i] = new RoofIntCornerBlock(Material.rock).setBlockName("blockRoofIntCorner" + i + "_").setBlockTextureName("blockRooftop_" + i).setCreativeTab(SimCraft.tabRoofs);
+            Repository.blockRoofSlopes[i] = new RoofSlopeBlock(Material.rock).setBlockName("blockRoofSlope" + i + "_").setBlockTextureName("blockRooftop_" + i).setCreativeTab(SimCraft.tabRoofs);
             GameRegistry.registerBlock(Repository.blockRoofCorners[i], SimBlockMeta.class, "blockRoofCorner" + i + "_");
             GameRegistry.registerBlock(Repository.blockRoofIntCorners[i], SimBlockMeta.class, "blockRoofIntCorner" + i + "_");
             GameRegistry.registerBlock(Repository.blockRoofSlopes[i], SimBlockMeta.class, "blockRoofSlope" + i + "_");

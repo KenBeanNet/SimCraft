@@ -67,7 +67,7 @@ public class PacketMarketBuyItem extends SimPacket {
 			
 			if (extPlayer.getSimoleans() >= price+tax)
 			{
-				if (player.inventory.addItemStackToInventory(new ItemStack(Block.getBlockFromName(item.item), 1, item.metadata)))
+				if (player.inventory.addItemStackToInventory(new ItemStack(Block.getBlockFromName(item.item), count, item.metadata)))
 				{
 					player.addChatMessage(new ChatComponentText("[SimCraft] You have purchased "+ count + " " + StatCollector.translateToLocal(item.item.replace("simcraft:", "") + item.metadata + ".name") + "(s) for " + (price + tax) + " simoleans." ));
 					extPlayer.removeSimoleans(price+tax);

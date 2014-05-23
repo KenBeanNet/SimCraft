@@ -83,6 +83,9 @@ public class PlayerEventListener {
         {
         	if (event.entityPlayer.inventory.getCurrentItem().getItem() instanceof ItemTool)
         	{
+        		if (event.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK)
+        			return; // Do not require this check if its a right click of a block.
+        		
         		ExtendedPlayer player = ExtendedPlayer.getExtendedPlayer(event.entityPlayer);
         		ItemTool tool = (ItemTool)event.entityPlayer.inventory.getCurrentItem().getItem();
         		if (player != null)
@@ -111,36 +114,46 @@ public class PlayerEventListener {
     	if (line.startsWith(".addsimoleans"))
     	{
     		String[] split = line.split(" ");
+    		EntityPlayerMP player = null;
+			ExtendedPlayer extPlayer = null;
+			int toGiveAmount = 0;
+			
     		if (split.length == 3)
     		{
+    			player = MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(split[1]);
+    			extPlayer = ExtendedPlayer.getExtendedPlayer(player);
+    			
+    			toGiveAmount = Integer.parseInt(split[2]);
+    		}
+    		else if (split.length == 2)
+    		{
+    			extPlayer = ExtendedPlayer.getExtendedPlayer(event.player);
+    			toGiveAmount = Integer.parseInt(split[1]);
+    		}
+    		else
+    			message = "[SimCraft] Error : .addSimoleans <PLAYER> <AMOUNT> ";
+    		
+    		if (extPlayer != null)
+			{
     			try 
     			{
-    				EntityPlayerMP player = MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(split[1]);
-    				ExtendedPlayer extPlayer = ExtendedPlayer.getExtendedPlayer(player);
-    				if (extPlayer != null)
-    				{
-
-        				int amount = Integer.parseInt(split[2]);
-        				extPlayer.addSimoleans(amount);
-        				if (event.username.toLowerCase().equals(split[1]))
-        					event.player.addChatMessage(new ChatComponentText("[SimCraft] You have given yourself " + amount + " simoleans."));
-        				else
-        				{
-        					event.player.addChatMessage(new ChatComponentText("[SimCraft] You have given "+ split[1] + " " + amount + " simoleans."));
-        					player.addChatMessage(new ChatComponentText("[SimCraft] " + event.username + " has given you " + amount + " simoleans."));
-        				}
-        				event.setCanceled(true);
-    				}
-    				else
-    					message = "[SimCraft] Error Cannot Find Online Player : " + split[1];
+        			extPlayer.addSimoleans(toGiveAmount);
+        			if (split.length == 2)
+        				event.player.addChatMessage(new ChatComponentText("[SimCraft] You have given yourself " + toGiveAmount + " simoleans."));
+        			else
+        			{
+        				event.player.addChatMessage(new ChatComponentText("[SimCraft] You have given "+ split[1] + " " + toGiveAmount + " simoleans."));
+        				player.addChatMessage(new ChatComponentText("[SimCraft] " + event.username + " has given you " + toGiveAmount + " simoleans."));
+        			}
+        			event.setCanceled(true);
     			}
     			finally
     			{
     				
     			}
     		}
-    		else
-    			message = "[SimCraft] Error : .addSimoleans <PLAYER> <AMOUNT> ";
+			else
+				message = "[SimCraft] Error Cannot Find Online Player : " + split[1];
 		}
     	
     	if (message != null)

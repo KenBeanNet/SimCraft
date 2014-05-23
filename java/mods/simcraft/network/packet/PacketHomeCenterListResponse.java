@@ -16,15 +16,17 @@ import mods.simcraft.network.SimPacket;
 public class PacketHomeCenterListResponse  extends SimPacket 
 {
 	private List<Home> homeList;
+	private int homeCenterPageCount;
 	
 	public PacketHomeCenterListResponse()
 	{
 		
 	}
 	
-	public PacketHomeCenterListResponse(List<Home> par1HomeList)
+	public PacketHomeCenterListResponse(List<Home> par1HomeList, int pageCount)
 	{
 		homeList = par1HomeList;
+		homeCenterPageCount = pageCount;
 	}
 	@Override
 	public void encodeInto(ChannelHandlerContext ctx, ByteBuf buffer) {
@@ -41,6 +43,7 @@ public class PacketHomeCenterListResponse  extends SimPacket
 			buffer.writeShort(homeList.get(i).type);
 			buffer.writeBoolean(homeList.get(i).isOnline);
 		}
+		buffer.writeInt(homeCenterPageCount);
 	}
 
 	@Override
@@ -61,6 +64,7 @@ public class PacketHomeCenterListResponse  extends SimPacket
 	    	home.isOnline = buffer.readBoolean();
 	    	homeList.add(home);
 		}
+		homeCenterPageCount = buffer.readInt();
 	}
 
 	@Override
@@ -69,6 +73,7 @@ public class PacketHomeCenterListResponse  extends SimPacket
 		{
 			HomeCenterGui gui = (HomeCenterGui)Minecraft.getMinecraft().currentScreen;
 			gui.homeList = homeList;
+			gui.maxPageNumber = homeCenterPageCount;
 		}
 	}
 

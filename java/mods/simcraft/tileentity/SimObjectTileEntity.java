@@ -39,7 +39,7 @@ public class SimObjectTileEntity extends TileEntity
 	public static final String NBT_LEVEL = "Level";
 	public static final String NBT_DIRECTION = "Direction";
 	
-	private String owner;
+	private String owner = "";
 	protected int buildTime;
 	protected int timeLeft;
 	protected int delay;
@@ -49,7 +49,6 @@ public class SimObjectTileEntity extends TileEntity
 	
 	public SimObjectTileEntity(int par1BuildTime)
 	{
-		owner = "";
 		buildTime = par1BuildTime;
 		timeLeft = par1BuildTime;
 		level = 1;
@@ -109,8 +108,8 @@ public class SimObjectTileEntity extends TileEntity
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-		//if (nbt.hasKey(NBT_OWNER_NAME))
-			//owner = nbt.getString(NBT_OWNER_NAME);
+		if (nbt.hasKey(NBT_OWNER_NAME))
+			owner = nbt.getString(NBT_OWNER_NAME);
 		buildTime = nbt.getInteger(NBT_BUILD_TIME);
 		timeLeft = nbt.getInteger(NBT_TIME_LEFT);
 		level = nbt.getShort(NBT_LEVEL);
@@ -120,8 +119,8 @@ public class SimObjectTileEntity extends TileEntity
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-		//if (!owner.isEmpty())
-			//nbt.setString(NBT_OWNER_NAME, owner);
+		if (!owner.isEmpty())
+			nbt.setString(NBT_OWNER_NAME, owner);
 		nbt.setInteger(NBT_BUILD_TIME, buildTime);
 		nbt.setInteger(NBT_TIME_LEFT, timeLeft);
 		nbt.setShort(NBT_LEVEL, level);
