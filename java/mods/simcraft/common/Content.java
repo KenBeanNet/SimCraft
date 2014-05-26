@@ -9,6 +9,7 @@ import mods.simcraft.blocks.FlowerBlock;
 import mods.simcraft.blocks.HomeBlock;
 import mods.simcraft.blocks.HomeCenterBlock;
 import mods.simcraft.blocks.MarketBlock;
+import mods.simcraft.blocks.SupplyChestBlock;
 import mods.simcraft.blocks.meta.FenceBlockMeta;
 import mods.simcraft.blocks.meta.FlowerBlockMeta;
 import mods.simcraft.blocks.meta.SimBlockMeta;
@@ -44,6 +45,8 @@ public class Content
         Repository.homeCenterBlock = new HomeCenterBlock(Material.wood).setBlockName("HomeCenterBlock").setCreativeTab(SimCraft.tabBlocks);
         GameRegistry.registerBlock(Repository.homeCenterBlock, "block.homecenter");
         Repository.blockBrick = new BrickBlock[TOTAL_BRICKS];
+        Repository.supplyChestBlock = new SupplyChestBlock(Material.wood).setBlockName("SupplyChestBlock").setCreativeTab(SimCraft.tabBlocks);
+        GameRegistry.registerBlock(Repository.supplyChestBlock, "block.supplyChest");
     }
 	
 	void registerBricks()

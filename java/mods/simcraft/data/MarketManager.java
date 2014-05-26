@@ -117,7 +117,7 @@ public class MarketManager
     	}
 	}
 	
-	public static int getTaxOnPrice(int marketLevel, int totalPrice)
+	public static int getTaxOnBuyPrice(int marketLevel, int totalPrice)
 	{
 		double taxLevel = 0.0;
 		switch (marketLevel)
@@ -130,6 +130,26 @@ public class MarketManager
 			case 2:
 			{
 				taxLevel = 0.40;
+				break;
+			}
+		}
+		return MathHelper.floor_double(totalPrice * taxLevel);
+	}
+	
+
+	public static int getTaxOnSellPrice(int marketLevel, int totalPrice)
+	{
+		double taxLevel = 0.0;
+		switch (marketLevel)
+		{
+			case 1:
+			{
+				taxLevel = 0.10;
+				break;
+			}
+			case 2:
+			{
+				taxLevel = 0.08;
 				break;
 			}
 		}
@@ -173,6 +193,21 @@ public class MarketManager
 			}
 		}
 		return toReturn;
+	}
+	
+	public static int getSellPriceOnItems(HashMap<String, Integer> items)
+	{
+		int toReturn = 0;
+		
+		for (String s : items.keySet())
+			toReturn += MarketPrice.getDefaultPriceOnItem(getMarketItemByUnlocalizedName(s), items.get(s));
+		
+		return toReturn;
+	}
+	
+	public static MarketItem getMarketItemByUnlocalizedName(String name)
+	{
+		return itemList.get(name);
 	}
 	
 	public static int getItemsPageCount() {

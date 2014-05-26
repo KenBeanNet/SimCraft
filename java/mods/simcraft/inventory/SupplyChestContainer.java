@@ -7,25 +7,26 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class MarketContainer extends Container 
+public class SupplyChestContainer extends Container 
 {
 	private int numRows;
 	SupplyChestTileEntity tile;
 	private IInventory lowerChestInventory;
 	
-	public MarketContainer(IInventory par1IInventory, IInventory par2IInventory)
+	public SupplyChestContainer(IInventory par1IInventory, IInventory par2IInventory)
     {
         this.lowerChestInventory = par2IInventory;
-        this.numRows = par2IInventory.getSizeInventory() / 3;
+        this.numRows = par2IInventory.getSizeInventory() / 9;
         par2IInventory.openInventory();
+        int i = (this.numRows - 4) * 18;
         int j;
         int k;
 
         for (j = 0; j < this.numRows; ++j)
         {
-            for (k = 0; k < 3; ++k)
+            for (k = 0; k < 9; ++k)
             {
-                this.addSlotToContainer(new Slot(par2IInventory, k + j * 3, 62 + k * 18, 27 + j * 18));
+                this.addSlotToContainer(new Slot(par2IInventory, k + j * 9, 8 + k * 18, 18 + j * 18));
             }
         }
 
@@ -33,13 +34,13 @@ public class MarketContainer extends Container
         {
             for (k = 0; k < 9; ++k)
             {
-                this.addSlotToContainer(new Slot(par1IInventory, k + j * 9 + 9, 8 + k * 18, 86 + j * 18 ));
+                this.addSlotToContainer(new Slot(par1IInventory, k + j * 9 + 9, 8 + k * 18, 103 + j * 18 + i));
             }
         }
 
         for (j = 0; j < 9; ++j)
         {
-            this.addSlotToContainer(new Slot(par1IInventory, j, 8 + j * 18, 144));
+            this.addSlotToContainer(new Slot(par1IInventory, j, 8 + j * 18, 161 + i));
         }
     }
 

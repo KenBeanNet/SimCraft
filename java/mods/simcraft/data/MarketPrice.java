@@ -14,7 +14,7 @@ public class MarketPrice
 	}
 	public static int getDefaultPriceOnItem(MarketItem item, int amount)
 	{
-		if (itemList.containsKey(item.item))
+		if (item != null && itemList.containsKey(item.item))
 			return itemList.get(item.item) * amount;
 		
 		return 100 * amount;

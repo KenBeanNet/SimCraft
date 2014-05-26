@@ -76,14 +76,14 @@ public class PacketMarketSellItemPriceCheck extends SimPacket {
 	@Override
 	public void handleServerSide(EntityPlayer player) 
 	{
-		//int totalPrice = MarketManager.getPriceCheck(items);
+		int totalPrice = MarketManager.getSellPriceOnItems(items);
 		TileEntity te = player.worldObj.getTileEntity(xCoord, yCoord, zCoord);
 		if (te instanceof MarketTileEntity)
 		{
 			tile = (MarketTileEntity)te;
-			//int totalTax = MarketManager.getTaxOnPrice(tile.getLevel(), totalPrice);
-			//int totalProfit = totalPrice - totalTax;
-			//SimCraft.packetPipeline.sendTo(new PacketMarketItemPriceCheckResult(totalPrice, totalTax, totalProfit), (EntityPlayerMP)player);
+			int totalTax = MarketManager.getTaxOnSellPrice(tile.getLevel(), totalPrice);
+			int totalProfit = totalPrice - totalTax;
+			SimCraft.packetPipeline.sendTo(new PacketMarketSellItemPriceCheckResult(totalPrice, totalTax, totalProfit), (EntityPlayerMP)player);
 		}
 		
 	}

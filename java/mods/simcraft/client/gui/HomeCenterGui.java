@@ -9,6 +9,7 @@ import mods.simcraft.common.Home;
 import mods.simcraft.data.HomeManager;
 import mods.simcraft.network.packet.PacketHomeCenterList;
 import mods.simcraft.network.packet.PacketMarketBuyOpen;
+import mods.simcraft.network.packet.PacketTeleportPlayerRequest;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -142,7 +143,8 @@ public class HomeCenterGui extends GuiScreen
 			if (homeList.size() >= button.id - 20)
 			{
 				Home h = homeList.get(button.id - 20);
-				//Teleport Player
+				
+				SimCraft.packetPipeline.sendToServer(new PacketTeleportPlayerRequest(h.xCoord, h.yCoord + 1, h.zCoord));
 			}
 		}
 

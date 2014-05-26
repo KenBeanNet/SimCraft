@@ -12,10 +12,12 @@ import mods.simcraft.client.gui.OverlayGui;
 import mods.simcraft.common.Repository;
 import mods.simcraft.inventory.DefaultContainer;
 import mods.simcraft.inventory.MarketContainer;
+import mods.simcraft.inventory.SupplyChestContainer;
 import mods.simcraft.player.ExtendedPlayer;
 import mods.simcraft.tileentity.HomeTileEntity;
 import mods.simcraft.tileentity.MarketTileEntity;
 import mods.simcraft.tileentity.SimObjectTileEntity;
+import mods.simcraft.tileentity.SupplyChestTileEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -36,7 +38,8 @@ public class CommonProxy implements IGuiHandler {
     {
 		GameRegistry.registerTileEntity(SimObjectTileEntity.class, SimCraft.MODID + "SimObjectTileEntity");
 		GameRegistry.registerTileEntity(HomeTileEntity.class, SimCraft.MODID + "HomeTileEntity");
-		GameRegistry.registerTileEntity(MarketTileEntity.class, SimCraft.MODID + "MarketTileEntity");
+		GameRegistry.registerTileEntity(MarketTileEntity.class, SimCraft.MODID + "MarketSoldTileEntity");
+		GameRegistry.registerTileEntity(SupplyChestTileEntity.class, SimCraft.MODID + "SupplyChestTileEntity");
     }
 	
 	public File getMinecraftDir()
@@ -59,6 +62,8 @@ public class CommonProxy implements IGuiHandler {
 				return new DefaultContainer();
 			case 4:
 				return new DefaultContainer();
+			case 5:
+				return new SupplyChestContainer(player.inventory, (SupplyChestTileEntity)world.getTileEntity(x, y, z));
 		}
 		return null;
 	}

@@ -9,6 +9,7 @@ public class Repository
     public static Block marketBlock;
     public static Block[] blockBrick;
     public static Block homeCenterBlock;
+    public static Block supplyChestBlock;
     
     //Fences
     public static Block[] blockFences;

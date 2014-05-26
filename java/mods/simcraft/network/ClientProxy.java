@@ -11,11 +11,13 @@ import mods.simcraft.client.gui.HomeGui;
 import mods.simcraft.client.gui.MarketBuyGui;
 import mods.simcraft.client.gui.MarketSellGui;
 import mods.simcraft.client.gui.OverlayGui;
+import mods.simcraft.client.gui.SupplyChestGui;
 import mods.simcraft.common.Repository;
 import mods.simcraft.item.render.ItemHomeRenderer;
 import mods.simcraft.tileentity.HomeTileEntity;
 import mods.simcraft.tileentity.MarketTileEntity;
 import mods.simcraft.tileentity.SimObjectTileEntity;
+import mods.simcraft.tileentity.SupplyChestTileEntity;
 import mods.simcraft.tileentity.render.ModelHome;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -70,11 +72,13 @@ public class ClientProxy extends CommonProxy
 			case 1: 
 				return new BuildingGui((SimObjectTileEntity)world.getTileEntity(x, y, z), x, y, z);
 			case 2: 
-				return new MarketSellGui(player, (MarketTileEntity)world.getTileEntity(x, y, z), x, y, z);
+				return new MarketSellGui(player, (MarketTileEntity)world.getTileEntity(x, y, z));
 			case 3:
-				return new MarketBuyGui(player, (MarketTileEntity)world.getTileEntity(x, y, z), x, y, z);
+				return new MarketBuyGui(player, (MarketTileEntity)world.getTileEntity(x, y, z));
 			case 4:
 				return new HomeCenterGui(player);
+			case 5:
+				return new SupplyChestGui(player, (SupplyChestTileEntity)world.getTileEntity(x, y, z));
 		}
 		return null;
 	}

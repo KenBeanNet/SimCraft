@@ -90,7 +90,7 @@ public class HomeGui extends SimGui
 		
 		if (MyTownHall())
 		{
-			drawCenteredString(this.fontRendererObj, "Welcome Home!", this.width / 2, 10, 0x6699FF);
+			drawCenteredString(this.fontRendererObj, "Welcome Home!", this.width / 2, 10, 0xFFFFFF);
 			
 			drawString(this.fontRendererObj, "Home Stats", 10, 50, 0xFFCC00);
 			drawString(this.fontRendererObj, "Level " + tileHome.getLevel(), 10, 60, 0x66CC66);

@@ -1,6 +1,10 @@
 package mods.simcraft.player;
 
+import mods.simcraft.SimCraft;
+import mods.simcraft.common.Home;
+import mods.simcraft.data.HomeManager;
 import mods.simcraft.data.JobManager;
+import mods.simcraft.network.packet.PacketTeleportPlayerRequest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemAxe;
@@ -113,6 +117,7 @@ public class PlayerEventListener {
 	
     	if (line.startsWith(".addsimoleans"))
     	{
+			event.setCanceled(true);
     		String[] split = line.split(" ");
     		EntityPlayerMP player = null;
 			ExtendedPlayer extPlayer = null;
@@ -131,7 +136,7 @@ public class PlayerEventListener {
     			toGiveAmount = Integer.parseInt(split[1]);
     		}
     		else
-    			message = "[SimCraft] Error : .addSimoleans <PLAYER> <AMOUNT> ";
+    			message = "[SimCraft] Error : .addSimoleans <PLAYER> <AMOUNT>";
     		
     		if (extPlayer != null)
 			{
@@ -145,7 +150,6 @@ public class PlayerEventListener {
         				event.player.addChatMessage(new ChatComponentText("[SimCraft] You have given "+ split[1] + " " + toGiveAmount + " simoleans."));
         				player.addChatMessage(new ChatComponentText("[SimCraft] " + event.username + " has given you " + toGiveAmount + " simoleans."));
         			}
-        			event.setCanceled(true);
     			}
     			finally
     			{
@@ -154,6 +158,62 @@ public class PlayerEventListener {
     		}
 			else
 				message = "[SimCraft] Error Cannot Find Online Player : " + split[1];
+		}
+    	else if (line.startsWith(".home"))
+    	{
+    		event.setCanceled(true);
+    		String[] split = line.split(" ");
+    		if (split.length == 1) // Send yourself to your home
+    		{
+        		Home h = HomeManager.getHomeByPlayerName(event.username);
+        		if (h != null)
+        		{
+        			event.player.setPositionAndUpdate(h.xCoord, h.yCoord, h.zCoord);
+        			event.player.addChatMessage(new ChatComponentText("[SimCraft] You have teleported home."));
+        		}
+        		else 
+        			event.player.addChatMessage(new ChatComponentText("[SimCraft] You do not have a home!"));
+    		}
+    		else if (split.length == 2) //Send yourself to another players home
+    		{
+    			Home h = HomeManager.getHomeByPlayerName(split[1]);
+        		if (h != null)
+        		{
+        			event.player.setPositionAndUpdate(h.xCoord, h.yCoord, h.zCoord);
+        			event.player.addChatMessage(new ChatComponentText("[SimCraft] You have teleported to " + split[1] + "'s home."));
+        		}
+        		else 
+        			event.player.addChatMessage(new ChatComponentText("[SimCraft] The Player " + split[1] + " does not have a home!"));
+    		}
+    		else if (split.length == 3) //Send another player to a players home
+    		{
+    			EntityPlayerMP player = MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(split[1]);
+    			if (player != null)
+    			{
+    				Home h = HomeManager.getHomeByPlayerName(split[2]);
+    				if (h != null)
+    				{
+    					player.setPositionAndUpdate(h.xCoord, h.yCoord, h.zCoord);
+    					event.player.addChatMessage(new ChatComponentText("[SimCraft] You have teleported " + split[2] + " to " + split[1] + "'s home."));
+    					player.addChatMessage(new ChatComponentText("[SimCraft] " + event.message + " has sent you to " + split[2] + "'s home."));
+    				}
+    				else 
+            			event.player.addChatMessage(new ChatComponentText("[SimCraft] The Player " + split[2] + " does not have a home!"));
+    			}
+    			else 
+        			event.player.addChatMessage(new ChatComponentText("[SimCraft] The Player " + split[1] + " does not exist or is not online!"));
+    		}
+    		else
+    		{
+				message = "[SimCraft] Error : .home / .home <PLAYER> / .home <PLAYER> <PLAYER>";
+    		}
+    	}
+		else if (line.startsWith(".help"))
+		{
+			event.setCanceled(true);
+			event.player.addChatMessage(new ChatComponentText("[SimCraft] The Following are known commands :"));
+			event.player.addChatMessage(new ChatComponentText("[SimCraft] .addSimoleans <PLAYER> <AMOUNT>"));
+			event.player.addChatMessage(new ChatComponentText("[SimCraft] .home / .home <PLAYER> / .home <PLAYER> <PLAYER>"));
 		}
     	
     	if (message != null)

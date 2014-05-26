@@ -58,7 +58,7 @@ public class PacketMarketBuyItemPriceCheck extends SimPacket {
 	@Override
 	public void handleServerSide(EntityPlayer player) {
 		int price = MarketPrice.getDefaultPriceOnItem(item, amount);
-		int tax = MarketManager.getTaxOnPrice(marketLevel, price);
+		int tax = MarketManager.getTaxOnBuyPrice(marketLevel, price);
 		
 		SimCraft.packetPipeline.sendTo(new PacketMarketBuyItemPriceCheckResult(price, tax), (EntityPlayerMP)player);
 	}

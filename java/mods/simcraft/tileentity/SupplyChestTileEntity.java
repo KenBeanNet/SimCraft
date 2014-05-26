@@ -13,13 +13,13 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.Constants;
 
-public class MarketTileEntity extends SimObjectTileEntity implements IInventory
+public class SupplyChestTileEntity extends SimObjectTileEntity implements IInventory
 {
 	public static final int BUILD_TIME = 500;
 	
 	public ItemStack[] chestContents;
 	
-	public MarketTileEntity() {
+	public SupplyChestTileEntity() {
 		super(BUILD_TIME);
 		
 		this.chestContents = new ItemStack[getSizeInventory()];
@@ -27,7 +27,7 @@ public class MarketTileEntity extends SimObjectTileEntity implements IInventory
 
 	@Override
 	public int getSizeInventory() {
-		return 6;
+		return 9;
 	}
 
 	@Override
@@ -142,10 +142,4 @@ public class MarketTileEntity extends SimObjectTileEntity implements IInventory
 
         tagCompound.setTag("Items", nbttaglist);
 	}
-	
-	public void soldItems()
-	{
-		this.chestContents = new ItemStack[getSizeInventory()];
-	}
-    
 }

@@ -108,7 +108,7 @@ public class HomeManager {
 	{
 		for (String h : homeList.keySet())
 		{
-			if (h.equals(username))
+			if (h.toLowerCase().equals(username.toLowerCase()))
 				return homeList.get(h);
 		}
 		return null;

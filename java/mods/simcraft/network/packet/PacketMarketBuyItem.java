@@ -63,7 +63,7 @@ public class PacketMarketBuyItem extends SimPacket {
 		if (extPlayer != null)
 		{
 			int price = MarketPrice.getDefaultPriceOnItem(item, count);
-			int tax = MarketManager.getTaxOnPrice(marketLevel, price);
+			int tax = MarketManager.getTaxOnBuyPrice(marketLevel, price);
 			
 			if (extPlayer.getSimoleans() >= price+tax)
 			{

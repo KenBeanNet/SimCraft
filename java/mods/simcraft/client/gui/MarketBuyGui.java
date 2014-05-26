@@ -31,9 +31,6 @@ public class MarketBuyGui extends SimGui
 	private MarketItem selectedItem;
 	
 	private EntityPlayer player;
-	private int xCoord;
-	private int yCoord;
-	private int zCoord;
 	private MarketTileEntity tile;
 	
 	private GuiTextField txtTownName;
@@ -52,12 +49,9 @@ public class MarketBuyGui extends SimGui
 	
 	private GuiButton[] btnMoreInfo = new GuiButton[9];
 	
-	public MarketBuyGui(EntityPlayer par1Player, MarketTileEntity par1Tile, int x, int y, int z)
+	public MarketBuyGui(EntityPlayer par1Player, MarketTileEntity par1Tile)
 	{
     	player = par1Player;
-		xCoord = x;
-		yCoord = y;
-		zCoord = z;
 		tile = par1Tile;
 	}
 
@@ -76,7 +70,7 @@ public class MarketBuyGui extends SimGui
 		
 		for (int i = 0; i < btnMoreInfo.length; i++)
 		{
-			btnMoreInfo[i] = new GuiButton(20 + i, 100 * (i % 3) + 43, 60 * (i / 3) + 70, 35, 20, "Info");
+			btnMoreInfo[i] = new GuiButton(20 + i, 120 * (i % 3) + 62, 60 * (i / 3) + 70, 35, 20, "Info");
 			btnMoreInfo[i].visible = false;
 			this.buttonList.add(btnMoreInfo[i]);
 		}
@@ -131,8 +125,8 @@ public class MarketBuyGui extends SimGui
 			        
 					GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 			        RenderHelper.enableGUIStandardItemLighting();
-					itemRender.renderItemIntoGUI(fontRendererObj, mc.getTextureManager(), itemStack, 100 * (i % 3) + 50, 60 * (i / 3) + 40);
-			        drawCenteredString(this.fontRendererObj, StatCollector.translateToLocal(itemStack.getDisplayName()), 100 * (i % 3) + 60, 60 * (i / 3) + 60, 0xFFCC00);
+					itemRender.renderItemIntoGUI(fontRendererObj, mc.getTextureManager(), itemStack, 120 * (i % 3) + 70, 60 * (i / 3) + 40);
+			        drawCenteredString(this.fontRendererObj, StatCollector.translateToLocal(itemStack.getDisplayName()), 120 * (i % 3) + 70, 60 * (i / 3) + 60, 0xFFCC00);
 			        RenderHelper.disableStandardItemLighting();
 			        GL11.glDisable(GL12.GL_RESCALE_NORMAL);
 			        
@@ -195,7 +189,7 @@ public class MarketBuyGui extends SimGui
 		}
 		else if (button.id == 4)
 		{
-			player.openGui(SimCraft.instance, 2, tile.getWorldObj(), xCoord, yCoord, zCoord);
+			player.openGui(SimCraft.instance, 2, tile.getWorldObj(), tile.xCoord, tile.yCoord, tile.zCoord);
 		}
 		else if (button.id == 5)
 		{

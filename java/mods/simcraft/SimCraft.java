@@ -21,6 +21,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 
 @Mod(modid = SimCraft.MODID, version = SimCraft.VERSION)
@@ -96,7 +97,7 @@ public class SimCraft
     public void load(FMLInitializationEvent evt)
     {
     	proxy.registerHandlers();
-    	NetworkRegistry.INSTANCE.registerGuiHandler(instance, proxy);
+    	NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy);
     	MinecraftForge.EVENT_BUS.register(this);
     }
     
@@ -105,5 +106,11 @@ public class SimCraft
     {
     	HomeManager.loadAllHomes();
     	MarketManager.loadMarketPlace();
+    }
+    
+    @EventHandler
+    public void serverStop(FMLServerStoppingEvent event)
+    {
+    	MarketManager.saveMarketPlace();
     }
 }

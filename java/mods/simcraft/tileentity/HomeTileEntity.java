@@ -112,14 +112,14 @@ public class HomeTileEntity extends SimObjectTileEntity
 			{
 				for (int z = zCoord - widthOfHome; z <= zCoord + widthOfHome; z++)
 				{
-					addBuildingTask(new BuildingTask(x, yCoord - 2, z, Blocks.bedrock));
-					if (x == xCoord - widthOfHome)
-						addBuildingTask(new BuildingTask(x, yCoord - 1, z, Blocks.stone));
-					if (x == xCoord + widthOfHome)
-						addBuildingTask(new BuildingTask(x, yCoord - 1, z, Blocks.stone));
+					//addBuildingTask(new BuildingTask(x, yCoord - 2, z, Blocks.bedrock));
+					//if (x == xCoord - widthOfHome)
+						//addBuildingTask(new BuildingTask(x, yCoord - 1, z, Blocks.stone));
+					//if (x == xCoord + widthOfHome)
+						//addBuildingTask(new BuildingTask(x, yCoord - 1, z, Blocks.stone));
 				}
-				addBuildingTask(new BuildingTask(x, yCoord - 1, zCoord + widthOfHome, Blocks.stone));
-				addBuildingTask(new BuildingTask(x, yCoord - 1, zCoord - widthOfHome, Blocks.stone));
+				//addBuildingTask(new BuildingTask(x, yCoord - 1, zCoord + widthOfHome, Blocks.stone));
+				//addBuildingTask(new BuildingTask(x, yCoord - 1, zCoord - widthOfHome, Blocks.stone));
 			}
 			
 			super.build(); //Always call Super.Build at end  This way if its alrdy completed, we clear the list. Avoiding server load.
