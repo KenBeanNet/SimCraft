@@ -35,7 +35,7 @@ public class HomeGui extends SimGui
 	private int xCoord;
 	private int yCoord;
 	private int zCoord;
-	private short homeType;
+	private short homeType; // Used in the creation of the home.  Not to be confused with later.
 	private HomeTileEntity tileHome;
 	
 	private GuiButton btnUpgradeLevel;
@@ -95,6 +95,7 @@ public class HomeGui extends SimGui
 			drawString(this.fontRendererObj, "Home Stats", 10, 50, 0xFFCC00);
 			drawString(this.fontRendererObj, "Level " + tileHome.getLevel(), 10, 60, 0x66CC66);
 			drawString(this.fontRendererObj, "Size " + HomeManager.getHomeSize(tileHome.getLevel()), 10, 70, 0x66CC66);
+			drawString(this.fontRendererObj, "Type " + HomeManager.getHomeTypeFromId(tileHome.getHomeType()), 10, 80, 0x66CC66);
 			
 			if (tileHome.hasNextLevel())
 			{
@@ -107,7 +108,7 @@ public class HomeGui extends SimGui
 		}
 		else if (OtherPlayerTownHall())
 		{
-			drawCenteredString(this.fontRendererObj, tileHome.getHomeName(), this.width / 2, 10, 0x6699FF);
+			drawCenteredString(this.fontRendererObj, tileHome.getHomeName(), this.width / 2, 10, 0xFFFFFF);
 		}
 		else if (AlreadyHaveTownHall())
 		{
@@ -120,9 +121,8 @@ public class HomeGui extends SimGui
 			drawString(this.fontRendererObj, "How to Create a Home", 20, 40, 0xFF0033);
 			
 			drawString(this.fontRendererObj, "Creating a home is simple.  First you need to name your home below.", 30, 50, 0xFFCC66);
-			drawString(this.fontRendererObj, "Then hit the create button.  Your home will start constructing!", 30, 60, 0xFFCC66);
-			drawString(this.fontRendererObj, "After it is fully built, you can upgrade your home to increase", 30, 70, 0xFFCC66);
-			drawString(this.fontRendererObj, "your total overall space.", 30, 80, 0xFFCC66);
+			drawString(this.fontRendererObj, "Then select which type of home you plan to have. Once you select a", 30, 60, 0xFFCC66);
+			drawString(this.fontRendererObj, "type it cannot be undone unless you demolish your home. ", 30, 70, 0xFFCC66);
 			
 			fontRendererObj.drawString("Home Name : ", 20, 102, 0xFFFFFF, false);
 			

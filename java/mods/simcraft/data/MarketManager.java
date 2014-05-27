@@ -18,10 +18,13 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.StatCollector;
 import mods.simcraft.SimCraft;
 import mods.simcraft.common.Home;
 import mods.simcraft.common.Repository;
+import mods.simcraft.player.ExtendedPlayer;
 import mods.simcraft.tileentity.MarketTileEntity;
 
 import com.google.gson.Gson;
@@ -60,7 +63,8 @@ public class MarketManager
 		    while(parser.hasNext())
 		    {
 		    	MarketItem item = gson.fromJson(parser.next(), MarketItem.class);
-		        itemList.put(item.item, item);
+		    	if (item != null && item.item != null)
+		    		itemList.put(item.item, item);
 		    }
 		} 
 		catch (FileNotFoundException e) 
@@ -158,39 +162,71 @@ public class MarketManager
 	
 	public static boolean sellItems(EntityPlayer player, MarketTileEntity tile)
 	{
+		ExtendedPlayer extPlayer = ExtendedPlayer.getExtendedPlayer(player);
+		if (extPlayer == null)
+			return false; //Protect items from being lost if we dont have an EXTPlayer to give money
+		
 		for (ItemStack s : tile.chestContents)
 		{
 			if (s == null)
 				continue;
+
+
+			int price;
+			String editItemName = "simcraft:" + s.getUnlocalizedName().replace("tile.", "");
 			
-			if (itemList.containsKey(s.getUnlocalizedName()))
+			if (itemList.containsKey(editItemName))
 			{
-				//itemList.get(s.getUnlocalizedName()).count += s.stackSize;
+				itemList.get(editItemName).count += s.stackSize;
+				price = MarketPrice.getDefaultPriceOnItem(getMarketItemByUnlocalizedName(editItemName), s.stackSize);
 			}
 			else
 			{
-				MarketItem item = new MarketItem(s.getUnlocalizedName(), s.stackSize, s.getItemDamage());
-				//itemList.put(s.getUnlocalizedName(), item);
+				MarketItem item = new MarketItem(editItemName, s.stackSize, s.getItemDamage());
+				price = MarketPrice.getDefaultPriceOnItem(item, s.stackSize);
+				//itemList.put(editItemName, item); Do not put on MarketPlace, Due to issue with naming convention between Minecraft
+				//Items and SimCraft Items // TODO
 			}
 			
+			int tax = MarketManager.getTaxOnSellPrice(tile.getLevel(), price);
+			extPlayer.addSimoleans(price-tax);
+			player.addChatMessage(new ChatComponentText("[SimCraft] You have sold "+ s.stackSize + " " + s.getDisplayName() + "(s) for " + (price - tax) + " simoleans." ));
 		}
-		tile.soldItems(); // Clear the Inventory and kill the items.
+		tile.sellItems(); // Clear the Inventory and kill the items.
 		saveMarketPlace(); // Save the data in the database.
 		return true;
 	}
 	
-	public static MarketItem[] getItems(int pageNumber) 
+	public static MarketItem[] getItems(String searchName, int pageNumber) 
 	{
+		int startStoring = (pageNumber - 1) * 9; //This is for the sorting with page.  We will start sorting after this amount of finds;
+		int control = 0;
+		int i = 0;
+
 		MarketItem[] toReturn = new MarketItem[9];
-		for (int i = 0; i < 9; i++)
+		MarketItem marketItem = null;
+		for (String s : itemList.keySet())
 		{
-			List<String> keysAsArray = new ArrayList<String>(itemList.keySet());
-			if (keysAsArray.size() > i + (pageNumber * 9))
+			marketItem = itemList.get(s);
+			if (marketItem == null || marketItem.item == null)
+				continue;
+			
+			if (StatCollector.translateToLocal(marketItem.item.replace("simcraft:", "") + marketItem.metadata + ".name").toLowerCase().contains(searchName.toLowerCase()))
 			{
-				MarketItem marketItem = itemList.get(keysAsArray.get(i + (pageNumber * 9)));
+				if (control < startStoring)
+				{
+					control++;
+					continue;
+				}
+				
 				if (marketItem.item != null)
+				{
 					toReturn[i] = marketItem;
+					i++;
+				}
 			}
+			if (i == 9)
+				break;
 		}
 		return toReturn;
 	}
@@ -200,7 +236,9 @@ public class MarketManager
 		int toReturn = 0;
 		
 		for (String s : items.keySet())
+		{
 			toReturn += MarketPrice.getDefaultPriceOnItem(getMarketItemByUnlocalizedName(s), items.get(s));
+		}
 		
 		return toReturn;
 	}
@@ -210,7 +248,23 @@ public class MarketManager
 		return itemList.get(name);
 	}
 	
-	public static int getItemsPageCount() {
-		return itemList.size() / 9;
+	public static int getItemsPageCount(String searchName) {
+		int toReturn = 0;
+		MarketItem marketItem = null;
+		for (String s : itemList.keySet())
+		{
+			marketItem = itemList.get(s);
+			if (marketItem == null || marketItem.item == null)
+				continue;
+			
+			if (StatCollector.translateToLocal(marketItem.item.replace("simcraft:", "") + marketItem.metadata + ".name").toLowerCase().contains(searchName.toLowerCase()))
+			{
+				if (marketItem.item != null)
+				{
+					toReturn++;
+				}
+			}
+		}
+		return MathHelper.ceiling_double_int(toReturn / 9.0) > 0 ? MathHelper.ceiling_double_int(toReturn / 9.0) : 1;
 	}
 }

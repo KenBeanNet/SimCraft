@@ -22,7 +22,7 @@ public class HomeCenterGui extends GuiScreen
 	public List<Home> homeList;
 	
 	private GuiTextField txtHomeSearch;
-	private String townName = "";
+	private String townSearchName = "";
 	private int pageNumber = 1;
 	private boolean showOffline;
 	public int maxPageNumber = 1;
@@ -79,7 +79,7 @@ public class HomeCenterGui extends GuiScreen
 				drawString(fontRendererObj, homeList.get(i).name, 10, (i * 20) + 50, 0xFFCC00);
 				drawString(fontRendererObj, homeList.get(i).ownerUsername, 80, (i * 20) + 50, 0x66CC66);
 				drawString(fontRendererObj, homeList.get(i).level + "", 160, (i * 20) + 50, 0x66CC66);
-				drawString(fontRendererObj, HomeManager.getHomeTypeFromInt(homeList.get(i).type), 190, (i * 20) + 50, 0x66CC66);
+				drawString(fontRendererObj, HomeManager.getHomeTypeFromId(homeList.get(i).type), 190, (i * 20) + 50, 0x66CC66);
 				btnTeleportHome[i].visible = true;
 			}
 		}
@@ -102,6 +102,7 @@ public class HomeCenterGui extends GuiScreen
 		txtHomeSearch.textboxKeyTyped(c, i);
 		pageNumber = 1;
 		maxPageNumber = 1;
+		resetInfoButtons();
 	}
 	
 	public void mouseClicked(int i, int j, int k)
@@ -112,9 +113,9 @@ public class HomeCenterGui extends GuiScreen
 	
 	public void updateScreen()
 	{
-		if (townName != txtHomeSearch.getText())
+		if (townSearchName != txtHomeSearch.getText())
 			SimCraft.packetPipeline.sendToServer(new PacketHomeCenterList(txtHomeSearch.getText(), pageNumber));
-		townName = txtHomeSearch.getText();
+		townSearchName = txtHomeSearch.getText();
 	}
 	
 	public void actionPerformed(GuiButton button)
@@ -150,12 +151,12 @@ public class HomeCenterGui extends GuiScreen
 
 		if (oldPageNumber != pageNumber)
 		{
-			resetInfoButtons(true);
+			resetInfoButtons();
 			SimCraft.packetPipeline.sendToServer(new PacketHomeCenterList(txtHomeSearch.getText(), pageNumber));
 		}
 	}
 	
-	private void resetInfoButtons(boolean turnOn)
+	private void resetInfoButtons()
 	{	
 		homeList = null;
 		for (int i = 0; i < 9; i++)

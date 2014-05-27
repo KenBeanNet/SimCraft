@@ -38,11 +38,15 @@ public class PacketMarketSellItemPriceCheckResult extends SimPacket {
 	public void encodeInto(ChannelHandlerContext ctx, ByteBuf buffer) 
 	{
 		buffer.writeInt(totalPrice);
+		buffer.writeInt(totalTax);
+		buffer.writeInt(totalProfit);
 	}
 
 	@Override
 	public void decodeInto(ChannelHandlerContext ctx, ByteBuf buffer) {
 		totalPrice = buffer.readInt();
+		totalTax = buffer.readInt();
+		totalProfit = buffer.readInt();
 	}
 
 	@Override

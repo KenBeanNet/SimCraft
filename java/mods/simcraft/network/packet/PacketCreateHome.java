@@ -66,6 +66,7 @@ public class PacketCreateHome extends SimPacket {
             	HomeTileEntity teHome = (HomeTileEntity)te;
             	teHome.setHomeName(home.name);
             	teHome.setOwner(home.ownerUsername);
+            	teHome.setHomeType(home.type);
             	player.worldObj.markBlockForUpdate(home.xCoord, home.yCoord, home.zCoord);
             	teHome.build();
 

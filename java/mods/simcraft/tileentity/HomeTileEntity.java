@@ -15,7 +15,9 @@ import mods.simcraft.data.HomeManager;
 public class HomeTileEntity extends SimObjectTileEntity 
 {
 	public static final String HOME_NAME = "HomeName";
+	public static final String HOME_TYPE = "HomeType";
 	private String homeName = "";
+	private short homeType;
 	
 	public HomeTileEntity()
 	{
@@ -162,6 +164,7 @@ public class HomeTileEntity extends SimObjectTileEntity
 		super.readFromNBT(nbt);
 		if (nbt.hasKey(HOME_NAME))
 			homeName = nbt.getString(HOME_NAME);
+		homeType = nbt.getShort(HOME_TYPE);
 	}
 	
 	public void writeToNBT(NBTTagCompound nbt)
@@ -169,6 +172,7 @@ public class HomeTileEntity extends SimObjectTileEntity
 		super.writeToNBT(nbt);
 		if (!homeName.isEmpty())
 			nbt.setString(HOME_NAME, homeName);
+		nbt.setShort(HOME_TYPE, homeType);
 	}
 	
 	public void setHomeName(String par1Name)
@@ -178,6 +182,16 @@ public class HomeTileEntity extends SimObjectTileEntity
 
 	public String getHomeName() {
 		return homeName;
+	}
+	
+	public void setHomeType(short type)
+	{
+		homeType = type;
+	}
+	
+	public short getHomeType()
+	{
+		return homeType;
 	}
 
 }

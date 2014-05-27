@@ -188,7 +188,7 @@ public class HomeManager {
 		return MathHelper.ceiling_double_int(toReturn / 9.0);
 	}
 	
-	public static String getHomeTypeFromInt(int value)
+	public static String getHomeTypeFromId(short value)
 	{
 		switch (value)
 		{

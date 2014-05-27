@@ -5,6 +5,7 @@ import java.util.Comparator;
 
 import mods.simcraft.SimCraft;
 import mods.simcraft.common.Repository;
+import mods.simcraft.player.ExtendedPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -70,7 +71,7 @@ public class MarketTileEntity extends SimObjectTileEntity implements IInventory
 
 	@Override
 	public String getInventoryName() {
-		return "supplychesttileentity";
+		return "markettileentity";
 	}
 
 	@Override
@@ -98,6 +99,7 @@ public class MarketTileEntity extends SimObjectTileEntity implements IInventory
 	@Override
 	public void closeInventory() {
 		// TODO Auto-generated method stub
+		int i = 0;
 	}
 
 	@Override
@@ -143,9 +145,11 @@ public class MarketTileEntity extends SimObjectTileEntity implements IInventory
         tagCompound.setTag("Items", nbttaglist);
 	}
 	
-	public void soldItems()
+	public void sellItems()
 	{
-		this.chestContents = new ItemStack[getSizeInventory()];
+		this.chestContents = new ItemStack[getSizeInventory()]; // Remove all Items from real chest
+		markDirty();
+		
 	}
     
 }

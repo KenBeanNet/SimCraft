@@ -2,6 +2,9 @@ package mods.simcraft.network.packet;
 
 import java.util.HashMap;
 
+import org.apache.logging.log4j.Level;
+
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -13,6 +16,7 @@ import mods.simcraft.network.SimPacket;
 import mods.simcraft.tileentity.HomeTileEntity;
 import mods.simcraft.tileentity.MarketTileEntity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -60,7 +64,10 @@ public class PacketMarketSellItems extends SimPacket {
 		{
 			tile = (MarketTileEntity)te;
 			player.worldObj.playSoundEffect((double)((float)xCoord + 0.5F), (double)((float)yCoord + 0.5F), (double)((float)zCoord + 0.5F), SimCraft.MODID + ":coins1", 2.0f, 2.0f);
-			MarketManager.sellItems(player, tile);
+			if (!MarketManager.sellItems(player, tile))
+				FMLLog.log(Level.ERROR, "[SimCraft] Player unable to sell items!");
+			else 
+				SimCraft.packetPipeline.sendTo(new PacketMarketItemsSold(), (EntityPlayerMP)player);
 		}
 	}
 

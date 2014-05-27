@@ -7,6 +7,7 @@ import mods.simcraft.SimCraft;
 import mods.simcraft.common.GuiHelpers;
 import mods.simcraft.data.MarketManager.MarketItem;
 import mods.simcraft.inventory.MarketContainer;
+import mods.simcraft.network.packet.PacketHomeCenterList;
 import mods.simcraft.network.packet.PacketMarketBuyItem;
 import mods.simcraft.network.packet.PacketMarketBuyItemPriceCheck;
 import mods.simcraft.network.packet.PacketMarketBuyOpen;
@@ -33,7 +34,8 @@ public class MarketBuyGui extends SimGui
 	private EntityPlayer player;
 	private MarketTileEntity tile;
 	
-	private GuiTextField txtTownName;
+	private GuiTextField txtSearchField;
+	private String marketSearchName = "";
 	private int pageNumber = 1;
 	public int maxPageNumber = 1;
 	
@@ -59,11 +61,9 @@ public class MarketBuyGui extends SimGui
 	public void initGui()
 	{
 		super.initGui();
-		
-		SimCraft.packetPipeline.sendToServer(new PacketMarketBuyOpen(pageNumber));
-		
-		txtTownName = new GuiTextField(this.fontRendererObj, 50 , this.height - 24, 100, 17);
-		txtTownName.setMaxStringLength(16);
+
+		txtSearchField = new GuiTextField(this.fontRendererObj, 50 , this.height - 24, 100, 17);
+		txtSearchField.setMaxStringLength(16);
 		
 		txtPurchaseAmount = new GuiTextField(this.fontRendererObj, this.width / 2 - 5, this.height / 3 + 30 , 100, 17);
 		txtPurchaseAmount.setMaxStringLength(16);
@@ -92,6 +92,8 @@ public class MarketBuyGui extends SimGui
 
 		btnNext.visible = true;
 		btnLast.visible = true;
+		
+		SimCraft.packetPipeline.sendToServer(new PacketMarketBuyOpen(marketSearchName, pageNumber));
 	}
 	
 	public void drawScreen(int x, int y, float f) 
@@ -106,7 +108,7 @@ public class MarketBuyGui extends SimGui
 		{
 			if (items != null)
 			{
-				txtTownName.drawTextBox();
+				txtSearchField.drawTextBox();
 				drawString(this.fontRendererObj, "Search: ", 5, this.height - 18, 0xFFCC00);
 				drawString(this.fontRendererObj, "Page " + (pageNumber) + "/" + maxPageNumber, this.width - 125, this.height - 18, 0xFFCC00);
 				
@@ -203,11 +205,12 @@ public class MarketBuyGui extends SimGui
 		else if (button.id == 6)
 		{
 			SimCraft.packetPipeline.sendToServer(new PacketMarketBuyItem(selectedItem, Integer.parseInt(txtPurchaseAmount.getText()), tile.getLevel()));
+			Minecraft.getMinecraft().thePlayer.closeScreen();
 		}
 		else if (button.id == 7)
 		{
 			selectedItem = null;
-			resetInfoButtons(true);
+			resetAllButtons(true);
 			resetPurchaseOrder();
 
 			btnPurchase.visible = false;
@@ -220,33 +223,54 @@ public class MarketBuyGui extends SimGui
 			
 			selectedItem = items[button.id - 20];
 			
-			resetInfoButtons(false);
+			resetAllButtons(false);
 			
 			btnPriceCheck.visible = true;
 		}
 		if (oldPageNumber != pageNumber)
 		{
-			resetInfoButtons(true);
-			SimCraft.packetPipeline.sendToServer(new PacketMarketBuyOpen(pageNumber));
+			resetInfoButtons(false);
+			SimCraft.packetPipeline.sendToServer(new PacketMarketBuyOpen(marketSearchName, pageNumber));
 		}
 	}
 	
 	public void keyTyped(char c, int i)
 	{
 		super.keyTyped(c, i);
-		txtTownName.textboxKeyTyped(c, i);
+		txtSearchField.textboxKeyTyped(c, i);
 		if (Character.isDigit(c) || c == '\b')
 			txtPurchaseAmount.textboxKeyTyped(c, i);
+
+		pageNumber = 1;
+		maxPageNumber = 1;
+		resetInfoButtons(false);
 	}
 	
 	public void mouseClicked(int i, int j, int k)
 	{
 		super.mouseClicked(i, j, k);
-		txtTownName.mouseClicked(i, j, k);
+		txtSearchField.mouseClicked(i, j, k);
 		txtPurchaseAmount.mouseClicked(i, j, k);
+	}
+
+	
+	public void updateScreen()
+	{
+		if (marketSearchName != txtSearchField.getText())
+			SimCraft.packetPipeline.sendToServer(new PacketMarketBuyOpen(txtSearchField.getText(), pageNumber));
+		marketSearchName = txtSearchField.getText();
 	}
 	
 	private void resetInfoButtons(boolean turnOn)
+	{	
+		items = new MarketItem[9];
+		for (int i = 0; i < btnMoreInfo.length; i++)
+		{
+			btnMoreInfo[i].visible = turnOn;
+		}
+	}
+	
+	private void resetAllButtons(boolean turnOn)
 	{	
 		for (int i = 0; i < btnMoreInfo.length; i++)
 		{

@@ -36,6 +36,7 @@ public class PacketHomeInfo extends SimPacket {
 		buffer.writeInt(home.yCoord);
 		buffer.writeInt(home.zCoord);
 		buffer.writeInt(home.dimensionId);
+		buffer.writeShort(home.type);
 	}
 
 	@Override
@@ -48,6 +49,7 @@ public class PacketHomeInfo extends SimPacket {
     	home.yCoord = buffer.readInt();
     	home.zCoord = buffer.readInt();
     	home.dimensionId = buffer.readInt();
+    	home.type = buffer.readShort();
 	}
 
 	@Override

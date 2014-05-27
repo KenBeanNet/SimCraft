@@ -137,7 +137,6 @@ public class SimObjectTileEntity extends TileEntity
 	{
 		owner = par1Owner;
 	}
-	
 	public short getLevel()
 	{
 		return level;
