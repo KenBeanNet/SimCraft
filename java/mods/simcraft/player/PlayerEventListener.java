@@ -1,5 +1,7 @@
 package mods.simcraft.player;
 
+import org.apache.logging.log4j.Level;
+
 import mods.simcraft.SimCraft;
 import mods.simcraft.common.Home;
 import mods.simcraft.data.HomeManager;
@@ -8,6 +10,7 @@ import mods.simcraft.network.packet.PacketTeleportPlayerRequest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemAxe;
+import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemPickaxe;
 import net.minecraft.item.ItemSpade;
 import net.minecraft.item.ItemStack;
@@ -16,9 +19,14 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.entity.player.PlayerUseItemEvent.Finish;
 import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent;
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
@@ -27,31 +35,47 @@ public class PlayerEventListener {
 	@SubscribeEvent
 	public void onEntityConstructing(EntityConstructing event)
 	{
-		if (event.entity instanceof EntityPlayer)
+		if (event.entity instanceof EntityPlayerMP)
 		{
-			if (event.entity.getExtendedProperties(ExtendedPlayer.EXT_PLAYER) == null)
+			System.out.println("[SimCraft] Registering extended properties.");
+			ExtendedPlayer.register((EntityPlayer)event.entity);
+			if (event.entity.getExtendedProperties(ExtendedPlayer.EXT_PLAYER) != null)
 			{
-				System.out.println("[SimCraft] Registering extended properties.");
-				ExtendedPlayer.register((EntityPlayer)event.entity);
-				if (event.entity.getExtendedProperties(ExtendedPlayer.EXT_PLAYER) != null)
-				{
-					System.out.println("[SimCraft] Extended properties registered successfully.");
-				}
+				System.out.println("[SimCraft] Extended properties registered successfully.");
 			}
-			else
-			{
-				System.out.println("[SimCraft] Extended properties already exist.");
-			}
+			
 		}
 	}
 	
 	@SubscribeEvent
-	public void onEntityLivingDeath(LivingDeathEvent event)
+	public void onEntityJoinWorldEvent(EntityJoinWorldEvent event)
 	{
-		if (event.entity instanceof EntityPlayer) // Handles the death of a EntityPlayer so they regain the data upon respawn.
+		/*if (event.entity instanceof EntityPlayerMP)
 		{
+			if (SimCraft.proxy.containsEntityData(((EntityPlayerMP)event.entity).getDisplayName()))
+			{
+				System.out.println("[SimCraft] Found ExtendedPlayer data for " + ((EntityPlayerMP)event.entity).getDisplayName() + " in memory. Loaded!");
+				ExtendedPlayer.loadProxyData((EntityPlayer) event.entity);
+			}
+
+			if (event.entity.isDead) // Protect from a user logging in dead and losing player data
+			{
+				FMLLog.log(Level.INFO, "[SimCraft] Player logged in dead.  Re-storing player data : " + ((EntityPlayerMP)event.entity).getDisplayName());
+				ExtendedPlayer.saveProxyData((EntityPlayer) event.entity);
+			}
+		}*/
+	}
+	
+	@SubscribeEvent
+	public void onLivingDeath(LivingDeathEvent event)
+	{
+		/*if (event.entity instanceof EntityPlayerMP) 
+		{
+			ExtendedPlayer player = ExtendedPlayer.getExtendedPlayer((EntityPlayerMP)event.entity);
+			player.respawn();
+			
 			ExtendedPlayer.saveProxyData((EntityPlayer) event.entity);
-		}
+		}*/
 	}
 	
 	@SubscribeEvent
@@ -81,7 +105,7 @@ public class PlayerEventListener {
 	
 	// Player interact event 
     @SubscribeEvent
-    public void playerInteract (PlayerInteractEvent event)
+    public void onPlayerInteract (PlayerInteractEvent event)
     {
         if (event.entityPlayer != null && event.entityPlayer.inventory.getCurrentItem() != null)
         {
@@ -96,17 +120,32 @@ public class PlayerEventListener {
         		{
         			if (tool instanceof ItemPickaxe && JobManager.getLevelByExp(player.getExcavatorLevel()) < tool.func_150913_i().getHarvestLevel() + 1)
         			{
-        				event.entityPlayer.addChatMessage(new ChatComponentText("You must be a higher Excavator before using this tool!"));
+        				event.entityPlayer.addChatMessage(new ChatComponentText("[SimCraft] You must be a higher Excavator before using this tool!"));
         				event.setCanceled(true);
         			}
         			else if ((tool instanceof ItemAxe || tool instanceof ItemSpade) && JobManager.getLevelByExp(player.getExcavatorLevel()) < tool.func_150913_i().getHarvestLevel() + 1)
         			{
-        				event.entityPlayer.addChatMessage(new ChatComponentText("You must be a higher Logger before using this tool!"));
+        				event.entityPlayer.addChatMessage(new ChatComponentText("[SimCraft] You must be a higher Logger before using this tool!"));
         				event.setCanceled(true);
         			}
         		}
         	}
         }
+    }
+    
+    @SubscribeEvent
+    public void onFoodEaten(Finish event)
+    {
+    	if(event.item.getItem() instanceof ItemFood)
+    	{
+    		ItemFood foodEaten = (ItemFood)event.item.getItem();
+    		ExtendedPlayer player = ExtendedPlayer.getExtendedPlayer(event.entityPlayer);
+    		if (player != null)
+    		{
+    			player.addHunger(foodEaten.func_150905_g(null));
+    			event.entityPlayer.addChatMessage(new ChatComponentText("[SimCraft] You have gained hunger by eatting " + foodEaten.get!"));
+    		}
+    	}
     }
     
     @SubscribeEvent
@@ -157,7 +196,7 @@ public class PlayerEventListener {
     			}
     		}
 			else
-				message = "[SimCraft] Error Cannot Find Online Player : " + split[1];
+				message = "[SimCraft] Error : .addSimoleans <PLAYER> <AMOUNT>";
 		}
     	else if (line.startsWith(".home"))
     	{
@@ -214,6 +253,11 @@ public class PlayerEventListener {
 			event.player.addChatMessage(new ChatComponentText("[SimCraft] The Following are known commands :"));
 			event.player.addChatMessage(new ChatComponentText("[SimCraft] .addSimoleans <PLAYER> <AMOUNT>"));
 			event.player.addChatMessage(new ChatComponentText("[SimCraft] .home / .home <PLAYER> / .home <PLAYER> <PLAYER>"));
+		}
+		else if (line.startsWith(".heal"))
+		{
+			ExtendedPlayer player = ExtendedPlayer.getExtendedPlayer(event.player);
+			player.respawn();
 		}
     	
     	if (message != null)

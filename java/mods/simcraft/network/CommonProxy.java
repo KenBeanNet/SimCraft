@@ -32,7 +32,7 @@ import cpw.mods.fml.relauncher.Side;
 
 public class CommonProxy implements IGuiHandler {
 	
-	private static final Map<String, ExtendedPlayer> extendedEntityData = new HashMap<String, ExtendedPlayer>();
+	private static final Map<String, NBTTagCompound> extendedEntityData = new HashMap<String, NBTTagCompound>();
 	
 	public void registerHandlers()
     {
@@ -79,7 +79,7 @@ public class CommonProxy implements IGuiHandler {
 	* Adds an entity's custom data to the map for temporary storage
 	* @param compound An NBT Tag Compound that stores the IExtendedEntityProperties data only
 	*/
-	public static void storeEntityData(String name, ExtendedPlayer compound)
+	public static void storeEntityData(String name, NBTTagCompound compound)
 	{
 		extendedEntityData.put(name, compound);
 	}
@@ -87,7 +87,7 @@ public class CommonProxy implements IGuiHandler {
 	/**
 	* Removes the compound from the map and returns the NBT tag stored for name or null if none exists
 	*/
-	public static ExtendedPlayer getEntityData(String name)
+	public static NBTTagCompound getEntityData(String name)
 	{
 		return extendedEntityData.remove(name);
 	}

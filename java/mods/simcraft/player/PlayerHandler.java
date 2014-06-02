@@ -21,7 +21,7 @@ public class PlayerHandler
 
         @SubscribeEvent
         public void PlayerRespawnEvent(PlayerRespawnEvent  event)
-        {	//Ran by Server.
+        {	//Ran by Server only.  Not on client.
         	SimCraft.packetPipeline.sendTo(new PacketExtendedInfo(ExtendedPlayer.getExtendedPlayer(event.player)), (EntityPlayerMP)event.player);
         }
         

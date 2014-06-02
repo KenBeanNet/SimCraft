@@ -9,6 +9,7 @@ import mods.simcraft.common.Repository;
 import mods.simcraft.creative.CreativeTab;
 import mods.simcraft.data.HomeManager;
 import mods.simcraft.data.MarketManager;
+import mods.simcraft.data.WorldManager;
 import mods.simcraft.network.CommonProxy;
 import mods.simcraft.network.PacketPipeline;
 import mods.simcraft.player.PlayerEventListener;
@@ -39,9 +40,9 @@ public class SimCraft
     public static CommonProxy proxy;
     
     public static final PacketPipeline packetPipeline = new PacketPipeline();
-    
-    private PlayerEventListener playerEventListener = new PlayerEventListener();
+
     private PlayerHandler playerHandler = new PlayerHandler();
+    private WorldManager worldManager;
     private PlayerEventListener events;
     public static CreativeTab tabBlocks;
     public static CreativeTab tabBricks;
@@ -55,6 +56,7 @@ public class SimCraft
     public SimCraft()
     {
     	MinecraftForge.EVENT_BUS.register(events = new PlayerEventListener());
+    	MinecraftForge.EVENT_BUS.register(worldManager = new WorldManager());
     }
     @EventHandler
     public void preInit (FMLPreInitializationEvent event)

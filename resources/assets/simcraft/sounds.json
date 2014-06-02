@@ -17,6 +17,12 @@
       "coins1"
     ]
   },
+"hunger": {
+    "category": "player",
+    "sounds": [
+      "hunger1"
+    ]
+  },
 "levelup": {
     "category": "player",
     "sounds": [

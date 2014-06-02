@@ -1,23 +1,32 @@
 package mods.simcraft.player;
 
+import java.util.Random;
+
 import mods.simcraft.SimCraft;
 import mods.simcraft.data.JobManager;
 import mods.simcraft.network.CommonProxy;
 import mods.simcraft.network.packet.PacketExtendedInfo;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
 
 public class ExtendedPlayer implements IExtendedEntityProperties
 {
 	public static final String EXT_PLAYER = "SCExtended";
+	public static final short TICK_CYCLE_DURATION = 20;
+	public static final short HUNGER_TICK_CYCLE = 1080; // Hunger Empty in 1 hour 30 minutes
 	
 	// I always include the entity to which the properties belong for easy access
 	// It's final because we won't be changing which player it is
 	private final EntityPlayer player;
+	private short tickCycle = 0;
+	private short lastSoundEffect = 0;
+	private Random random = new Random();
 
 	private int simoleans;
 	private int excavator;
@@ -77,25 +86,62 @@ public class ExtendedPlayer implements IExtendedEntityProperties
 		
 	}
 
-	public static void saveProxyData(EntityPlayer player) 
+	public static void saveProxyData(EntityPlayer par1Player) 
 	{
-		ExtendedPlayer playerData = ExtendedPlayer.getExtendedPlayer(player);
-
-		CommonProxy.storeEntityData(player.getDisplayName(), playerData);
+		ExtendedPlayer player = ExtendedPlayer.getExtendedPlayer(par1Player);
+		NBTTagCompound playerData = new NBTTagCompound();
+		player.saveNBTData(playerData);
+		CommonProxy.storeEntityData(par1Player.getDisplayName(), playerData);
 	}
 	
-	public static void loadProxyData(EntityPlayer player) 
+	public static void loadProxyData(EntityPlayer par1Player) 
 	{
-		ExtendedPlayer savedData = CommonProxy.getEntityData(player.getDisplayName());
+		NBTTagCompound savedData = CommonProxy.getEntityData(par1Player.getDisplayName());
+		ExtendedPlayer player = ExtendedPlayer.getExtendedPlayer(par1Player);
 		
-		if(savedData != null) {
-			player.registerExtendedProperties(ExtendedPlayer.EXT_PLAYER, savedData);
+		if(savedData != null && player != null) {
+			player.loadNBTData(savedData);
 		}
 	}
 	
 	public static void register(EntityPlayer player)
 	{
 		player.registerExtendedProperties(ExtendedPlayer.EXT_PLAYER, new ExtendedPlayer(player));
+	}
+	
+	public void runLife()
+	{
+		if (tickCycle % TICK_CYCLE_DURATION == 0)
+		{
+
+			player.getFoodStats().setFoodLevel(10);
+
+			if (tickCycle % HUNGER_TICK_CYCLE == 0)
+			{
+				removeHunger(1);
+				if (canPlaySound())
+				{
+					if (getHunger() <= 50 && random.nextInt(5) == 0)
+						playSound("hunger");
+					else if (getHunger() <= 30 && random.nextInt(3) == 0)
+						playSound("hunger");
+					else if (getHunger() <= 10)
+						playSound("hunger");
+				}
+			}
+		}
+		tickCycle++;
+		lastSoundEffect--;
+	}
+	
+	private void playSound(String name)
+	{
+		player.worldObj.playSoundEffect((double)((float)player.posX + 0.5F), (double)((float)player.posY + 0.5F), (double)((float)player.posZ + 0.5F), SimCraft.MODID + ":" + name, 2.0f, 2.0f);
+		lastSoundEffect = 400; //20 Seconds?
+	}
+	private boolean canPlaySound()
+	{
+		return lastSoundEffect <= 0;
 	}
 	
 	public void setSimoleans(int value)
@@ -170,7 +216,7 @@ public class ExtendedPlayer implements IExtendedEntityProperties
 
 	private void markDirty()
 	{
-		SimCraft.packetPipeline.sendTo(new PacketExtendedInfo(getExtendedPlayer(player)), (EntityPlayerMP)player);
+		SimCraft.packetPipeline.sendTo(new PacketExtendedInfo(this), (EntityPlayerMP)player);
 	}
 	
 	private void levelUp()
@@ -181,6 +227,11 @@ public class ExtendedPlayer implements IExtendedEntityProperties
 	public void setHunger(int value)
 	{
 		hunger = value;
+		if (hunger <= 0)
+		{
+			hunger = 0;
+			player.attackEntityFrom(DamageSource.generic, player.getMaxHealth());
+		}
 	}
 	public int getHunger()
 	{
@@ -196,8 +247,11 @@ public class ExtendedPlayer implements IExtendedEntityProperties
 	public void removeHunger(int value)
 	{
 		hunger -= value;
-		if (hunger < 0)
+		if (hunger <= 0)
+		{
 			hunger = 0;
+			player.attackEntityFrom(DamageSource.generic, player.getMaxHealth());
+		}
 		markDirty();
 	}
 	public void setComfort(int value)
@@ -242,6 +296,13 @@ public class ExtendedPlayer implements IExtendedEntityProperties
 		hygiene -= value;
 		if (hygiene < 0)
 			hygiene = 0;
+		markDirty();
+	}
+
+	public void respawn() {
+		hunger = 100;
+		comfort = 100;
+		hygiene = 100;
 		markDirty();
 	}
 }

@@ -66,16 +66,19 @@ public class PacketExtendedInfo extends SimPacket {
 	@Override
 	public void handleClientSide(EntityPlayer player) {
 		ExtendedPlayer par1Player = ExtendedPlayer.getExtendedPlayer(player);
-        if (par1Player != null)
+        if (par1Player == null)
         {
-        	par1Player.setSimoleans(simoleans);
-        	par1Player.setExcavator(excavator);
-        	par1Player.setLogger(logger);
-        	
-        	par1Player.setHunger(hunger);
-        	par1Player.setComfort(comfort);
-        	par1Player.setHygiene(hygiene);
+        	ExtendedPlayer.register(player);
         }
+        par1Player = ExtendedPlayer.getExtendedPlayer(player);
+        
+    	par1Player.setSimoleans(simoleans);
+    	par1Player.setExcavator(excavator);
+    	par1Player.setLogger(logger);
+    	
+    	par1Player.setHunger(hunger);
+    	par1Player.setComfort(comfort);
+    	par1Player.setHygiene(hygiene);
 	}
 
 	@Override
